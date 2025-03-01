@@ -1,10 +1,14 @@
 import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LoginRegister from "./LoginRegister";
 
 const App: React.FC = () => {
   return (
-    <div>
-      <h1>Hello, World!</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LoginRegister />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
