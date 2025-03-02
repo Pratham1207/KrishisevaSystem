@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
+const fertilizerRoutes = require("./routes/fertilizerRoutes");
+const pesticideRoutes = require("./routes/pesticideRoutes");
+
 require("dotenv").config();
 
 const app = express();
@@ -19,6 +22,8 @@ mongoose
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/fertilizers", fertilizerRoutes);
+app.use("/api/pesticides", pesticideRoutes);
 
 // Listening Server
 const PORT = process.env.PORT || 5000;
