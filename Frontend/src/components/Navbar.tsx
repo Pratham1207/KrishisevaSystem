@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
 
   const menuOptions: MenuItem[] = [
     { text: "Home", path: "/" },
-    { text: "Cold Storage", path: "/" },
+    { text: "Cold Storage", path: "/cold-storage" },
     { text: "Plants", path: "/plant-details" },
     { text: "About Us", path: "/about-us" },
     { text: "Contact Us", path: "/contact-us" },
