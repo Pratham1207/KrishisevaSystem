@@ -13,6 +13,10 @@ const ContactUs: React.FC = () => {
     message: "",
   });
 
+  const [loading, setLoading] = useState<boolean>(false);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -20,9 +24,36 @@ const ContactUs: React.FC = () => {
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    alert("Thank you for contacting us! We will get back to you shortly.");
+    setLoading(true);
+    setSuccess(null);
+    setError(null);
+
+    try {
+      const response = await fetch("http://localhost:5000/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong!");
+      }
+
+      setSuccess(
+        "Thank you for contacting us! We will get back to you shortly."
+      );
+      setFormData({ name: "", email: "", message: "" }); // Clear form
+      setLoading(false);
+    } catch (err: any) {
+      setError(err.message || "Failed to send message.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,6 +70,9 @@ const ContactUs: React.FC = () => {
         Our team strives to respond to all inquiries within 48 hours. We look
         forward to hearing from you.
       </p>
+
+      {success && <p className="success-message">{success}</p>}
+      {error && <p className="error-message">{error}</p>}
 
       <form onSubmit={handleSubmit} className="contact-form">
         <div className="form-group">
@@ -79,8 +113,8 @@ const ContactUs: React.FC = () => {
           ></textarea>
         </div>
 
-        <button type="submit" className="submit-button">
-          Submit
+        <button type="submit" className="submit-button" disabled={loading}>
+          {loading ? "Sending..." : "Submit"}
         </button>
       </form>
 
