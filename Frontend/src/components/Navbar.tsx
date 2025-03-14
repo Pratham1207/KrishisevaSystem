@@ -11,7 +11,7 @@ import {
   ListItemText,
   Divider,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface MenuItem {
   text: string;
@@ -30,6 +30,12 @@ const Navbar: React.FC = () => {
     { text: "Contact Us", path: "/contact-us" },
   ];
 
+  const navigate = useNavigate();
+
+  const handleSignIn = () => {
+    navigate("/login");
+  };
+
   return (
     <nav className="navbar">
       <div className="nav-logo-container">
@@ -42,8 +48,9 @@ const Navbar: React.FC = () => {
             {item.text}
           </Link>
         ))}
-        <button className="primary-button">Sign up</button>
-        <button className="primary-button">Sign In</button>
+        <button className="primary-button" onClick={handleSignIn}>
+          Sign In
+        </button>
       </div>
       <div className="navbar-menu-container">
         <HiOutlineBars3 onClick={() => setOpenMenu(true)} />

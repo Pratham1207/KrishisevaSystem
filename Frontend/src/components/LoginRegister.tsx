@@ -42,7 +42,7 @@ const LoginRegister: React.FC = () => {
     if (isLogin) {
       localStorage.setItem("token", data.token);
       alert("Login Successful!");
-      window.location.href = "/dashboard";
+      window.location.href = "/";
     } else {
       alert("Registration Successful! Please login.");
       switchContent(); // Switching to login panel after succefull Registration

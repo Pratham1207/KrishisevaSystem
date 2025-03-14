@@ -15,11 +15,12 @@ body {
 .content {
   background-color: #fff;
   border-radius: 40px;
-  position: relative;
+  /* max-width: 100%; */
+  /* min-height: 480px; */
   overflow: hidden;
-  width: 50vw;
-  min-height: 480px;
-  max-width: 100%;
+  position: relative;
+  /* width: 50vw; */
+  margin: 4rem 15rem;
 }
 
 .content button {
