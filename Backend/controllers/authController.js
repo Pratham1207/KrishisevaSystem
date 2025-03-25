@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
   try {
-    const { email, password, role = "farmer" } = req.body;
+    const { name, email, phone, password, role = "farmer" } = req.body;
 
     // Checking if user already exists
     const existingUser = await User.findOne({ email });

@@ -23,11 +23,11 @@ mongoose
   .catch((err) => console.log(err));
 
 // Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/fertilizers", fertilizerRoutes);
-app.use("/api/pesticides", pesticideRoutes);
-app.use("/api/contact", contactUsRoute);
-app.use("/api/soildata", soilDataRoutes);
+app.use("/auth", authRoutes);
+app.use("/fertilizers", fertilizerRoutes);
+app.use("/pesticides", pesticideRoutes);
+app.use("/contact", contactUsRoute);
+app.use("/soildata", soilDataRoutes);
 
 // Listening Server
 const PORT = process.env.PORT || 5000;
