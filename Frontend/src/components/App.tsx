@@ -9,6 +9,7 @@ import AboutUs from "./AboutUs";
 import ContactUs from "./ContactUs";
 import PlantDetail from "./PlantDetail";
 import ColdStorage from "./ColdStorage";
+import SoilDataDashboard from "./SoilDataDemo";
 
 const App: React.FC = () => {
   const isAuthenticated = localStorage.getItem("token");
@@ -28,6 +29,7 @@ const App: React.FC = () => {
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/plant-details" element={<PlantDetail />} />
           <Route path="/cold-storage" element={<ColdStorage />} />
+          <Route path="/soil-data-demo" element={<SoilDataDashboard />} />
         </Routes>
         <Footer />
       </div>
