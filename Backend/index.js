@@ -6,6 +6,7 @@ const authRoutes = require("./routes/authRoutes");
 const fertilizerRoutes = require("./routes/fertilizerRoutes");
 const pesticideRoutes = require("./routes/pesticideRoutes");
 const contactUsRoute = require("./routes/contactUsRoute");
+const soilDataRoutes = require("./routes/soilDataRoutes");
 
 require("dotenv").config();
 
@@ -26,6 +27,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/fertilizers", fertilizerRoutes);
 app.use("/api/pesticides", pesticideRoutes);
 app.use("/api/contact", contactUsRoute);
+app.use("/api/soildata", soilDataRoutes);
 
 // Listening Server
 const PORT = process.env.PORT || 5000;
