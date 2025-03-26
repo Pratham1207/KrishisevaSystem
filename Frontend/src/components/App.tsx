@@ -11,7 +11,7 @@ import ColdStorage from "./ColdStorage";
 import UserProfile from "./UserProfile";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./custom.css";
+import "../styles/custom.css";
 
 const App: React.FC = () => {
   const isAuthenticated = localStorage.getItem("token");
@@ -23,10 +23,7 @@ const App: React.FC = () => {
         <ToastContainer position="top-right" autoClose={3000} theme="colored" />
         <Routes>
           <Route path="/login" element={<LoginRegister />} />
-          <Route
-            path="/"
-            element={isAuthenticated ? <Dashboard /> : <Navigate to="/" />}
-          />
+          <Route path="/" element={<Dashboard />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/plant-details" element={<PlantDetail />} />

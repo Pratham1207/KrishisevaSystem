@@ -1,7 +1,8 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import "./LoginRegister.css";
+import axios from "axios";
+import "../styles/LoginRegister.css";
 
 interface RegisterData {
   name: string;
@@ -57,26 +58,19 @@ const LoginRegister: React.FC = () => {
     setError(null);
 
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/auth/register`,
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: registerData.name,
-            phone: registerData.phone,
-            email: registerData.email,
-            password: registerData.password,
-            role: registerData.role || "farmer",
-          }),
+          name: registerData.name,
+          phone: registerData.phone,
+          email: registerData.email,
+          password: registerData.password,
+          role: registerData.role || "farmer",
         }
       );
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Registration failed");
       toast.success("Registration successful! Please login.");
-      // alert("Registration successful! Please login.");
-      switchContent();
+      switchContent(); // Switch to login form
       setRegisterData({
         name: "",
         email: "",
@@ -85,8 +79,9 @@ const LoginRegister: React.FC = () => {
         role: "",
       });
     } catch (err: any) {
-      toast.error("Something went wrong. Please try again.");
-      setError(err.message);
+      const msg = err?.response?.data?.message || "Registration failed!";
+      toast.error(msg);
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -98,30 +93,23 @@ const LoginRegister: React.FC = () => {
     setError(null);
 
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/auth/login`,
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: loginData.emailOrUsername,
-            password: loginData.password,
-          }),
+          email: loginData.emailOrUsername,
+          password: loginData.password,
         }
       );
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Login failed");
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
       toast.success("Login successful!");
-      // alert("Login successful!");
       navigate("/");
     } catch (err: any) {
-      toast.error("Something went wrong. Please try again.");
-
-      setError(err.message);
+      const msg = err?.response?.data?.message || "Login failed!";
+      toast.error(msg);
+      setError(msg);
     } finally {
       setLoading(false);
     }
