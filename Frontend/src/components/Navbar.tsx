@@ -60,11 +60,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="navbar">
-      <Link
-        to="/"
-        className="nav-logo-container"
-        style={{ textDecoration: "none" }}
-      >
+      <Link to="/" className="d-flex align-items-center text-decoration-none">
         <img src={Logo} alt="KrishiSeva Logo" className="nav-logo" />
         <span className="nav-title">KrishiSeva</span>
       </Link>

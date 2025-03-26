@@ -12,6 +12,7 @@ import UserProfile from "./UserProfile";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/custom.css";
+import PageNotFound from "./PageNotFound";
 
 const App: React.FC = () => {
   const isAuthenticated = localStorage.getItem("token");
@@ -29,6 +30,8 @@ const App: React.FC = () => {
           <Route path="/plant-details" element={<PlantDetail />} />
           <Route path="/cold-storage" element={<ColdStorage />} />
           <Route path="/profile" element={<UserProfile />} />
+
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
         <Footer />
       </div>

@@ -79,8 +79,7 @@ const UserProfile: React.FC = () => {
     }
   };
 
-  if (!profile)
-    return <p style={{ textAlign: "center" }}>Loading profile...</p>;
+  if (!profile) return <p className="text-center">Loading profile...</p>;
 
   return (
     <div className="profile-container">
