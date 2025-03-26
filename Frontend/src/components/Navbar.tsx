@@ -7,30 +7,52 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   Divider,
+  Menu,
+  MenuItem as MuiMenuItem,
+  IconButton,
+  Avatar,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 
 interface MenuItem {
   text: string;
-  // icon: JSX.Element;
   path: string;
 }
 
 const Navbar: React.FC = () => {
   const [openMenu, setOpenMenu] = useState<boolean>(false);
+  const [toggleMenu, setToggleMenu] = useState<null | HTMLElement>(null);
+
+  const navigate = useNavigate();
 
   const menuOptions: MenuItem[] = [
     { text: "Home", path: "/" },
-    { text: "Cold Storage", path: "/cold-storage" },
+    { text: "Cold Storage", path: "/coldstorage" },
     { text: "Plants", path: "/plant-details" },
     { text: "About Us", path: "/about-us" },
     { text: "Contact Us", path: "/contact-us" },
   ];
 
-  const navigate = useNavigate();
+  const user = localStorage.getItem("user");
+  const userObj = user ? JSON.parse(user) : null;
+
+  const handleProfileMenuClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setToggleMenu(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setToggleMenu(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
+  };
 
   const handleSignIn = () => {
     navigate("/login");
@@ -48,9 +70,33 @@ const Navbar: React.FC = () => {
             {item.text}
           </Link>
         ))}
-        <button className="primary-button" onClick={handleSignIn}>
-          Sign In
-        </button>
+
+        {!userObj ? (
+          <button className="primary-button" onClick={handleSignIn}>
+            Sign In
+          </button>
+        ) : (
+          <>
+            <IconButton onClick={handleProfileMenuClick}>
+              <Avatar>{userObj.name.charAt(0).toUpperCase()}</Avatar>
+            </IconButton>
+            <Menu
+              anchorEl={toggleMenu}
+              open={Boolean(toggleMenu)}
+              onClose={handleMenuClose}
+            >
+              <MuiMenuItem
+                onClick={() => {
+                  handleMenuClose();
+                  navigate("/profile");
+                }}
+              >
+                My Profile
+              </MuiMenuItem>
+              <MuiMenuItem onClick={handleLogout}>Logout</MuiMenuItem>
+            </Menu>
+          </>
+        )}
       </div>
       <div className="navbar-menu-container">
         <HiOutlineBars3 onClick={() => setOpenMenu(true)} />
@@ -66,7 +112,6 @@ const Navbar: React.FC = () => {
             {menuOptions.map((item) => (
               <ListItem key={item.text} disablePadding>
                 <ListItemButton component={Link} to={item.path}>
-                  {/* <ListItemIcon>{item.icon}</ListItemIcon> */}
                   <ListItemText primary={item.text} />
                 </ListItemButton>
               </ListItem>

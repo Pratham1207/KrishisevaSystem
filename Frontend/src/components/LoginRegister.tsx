@@ -112,6 +112,7 @@ const LoginRegister: React.FC = () => {
       if (!response.ok) throw new Error(data.message || "Login failed");
 
       localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
       alert("Login successful!");
       navigate("/");
     } catch (err: any) {
