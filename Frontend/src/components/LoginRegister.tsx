@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "./LoginRegister.css";
 
 interface RegisterData {
@@ -73,8 +74,8 @@ const LoginRegister: React.FC = () => {
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || "Registration failed");
-
-      alert("Registration successful! Please login.");
+      toast.success("Registration successful! Please login.");
+      // alert("Registration successful! Please login.");
       switchContent();
       setRegisterData({
         name: "",
@@ -84,6 +85,7 @@ const LoginRegister: React.FC = () => {
         role: "",
       });
     } catch (err: any) {
+      toast.error("Something went wrong. Please try again.");
       setError(err.message);
     } finally {
       setLoading(false);
@@ -113,9 +115,12 @@ const LoginRegister: React.FC = () => {
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      alert("Login successful!");
+      toast.success("Login successful!");
+      // alert("Login successful!");
       navigate("/");
     } catch (err: any) {
+      toast.error("Something went wrong. Please try again.");
+
       setError(err.message);
     } finally {
       setLoading(false);
