@@ -15,6 +15,7 @@ import {
   Avatar,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
+import "./Navbar.css";
 
 interface MenuItem {
   text: string;
@@ -24,7 +25,6 @@ interface MenuItem {
 const Navbar: React.FC = () => {
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const [toggleMenu, setToggleMenu] = useState<null | HTMLElement>(null);
-
   const navigate = useNavigate();
 
   const menuOptions: MenuItem[] = [
@@ -57,7 +57,6 @@ const Navbar: React.FC = () => {
   const handleSignIn = () => {
     navigate("/login");
   };
-  console.log(userObj);
 
   return (
     <nav className="navbar">
@@ -65,13 +64,13 @@ const Navbar: React.FC = () => {
         <img src={Logo} alt="Logo" className="nav-logo" />
         <span className="nav-title">KrishiSeva</span>
       </div>
-      <div className="navbar-links-container">
+
+      <div className="navbar-links-container desktop-only">
         {menuOptions.map((item) => (
           <Link key={item.text} to={item.path}>
             {item.text}
           </Link>
         ))}
-
         {!userObj ? (
           <button className="primary-button" onClick={handleSignIn}>
             Sign In
@@ -99,9 +98,12 @@ const Navbar: React.FC = () => {
           </>
         )}
       </div>
+
       <div className="navbar-menu-container">
         <HiOutlineBars3 onClick={() => setOpenMenu(true)} />
       </div>
+
+      {/* Drawer - Mobile Menu */}
       <Drawer open={openMenu} onClose={() => setOpenMenu(false)} anchor="right">
         <Box
           sx={{ width: 250 }}
@@ -119,6 +121,30 @@ const Navbar: React.FC = () => {
             ))}
           </List>
           <Divider />
+          <Box sx={{ p: 2 }}>
+            {!userObj ? (
+              <button className="primary-button" onClick={handleSignIn}>
+                Sign In
+              </button>
+            ) : (
+              <>
+                <p style={{ fontWeight: 600, marginBottom: "10px" }}>
+                  Hello, {userObj.name}
+                </p>
+                <button
+                  className="drawer-link"
+                  onClick={() => {
+                    navigate("/profile");
+                  }}
+                >
+                  My Profile
+                </button>
+                <button className="drawer-link" onClick={handleLogout}>
+                  Logout
+                </button>
+              </>
+            )}
+          </Box>
         </Box>
       </Drawer>
     </nav>
