@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 interface FormData {
   name: string;
@@ -28,29 +29,17 @@ const ContactUs: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/contact`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
+        formData
       );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Something went wrong!");
-      }
 
       toast.success("Thank you for contacting us! We'll get back to you soon.");
       setFormData({ name: "", email: "", message: "" }); // Clear form
     } catch (err: any) {
-      toast.error(err.message || "Failed to send message.");
-    } finally {
-      setLoading(false);
+      const errorMsg =
+        err?.response?.data?.message || "Failed to send message.";
+      toast.error(errorMsg);
     }
   };
 

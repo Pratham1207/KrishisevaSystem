@@ -15,7 +15,7 @@ import {
   Avatar,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import "./Navbar.css";
+import "../styles/Navbar.css";
 
 interface MenuItem {
   text: string;
@@ -60,10 +60,14 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="navbar">
-      <div className="nav-logo-container">
-        <img src={Logo} alt="Logo" className="nav-logo" />
+      <Link
+        to="/"
+        className="nav-logo-container"
+        style={{ textDecoration: "none" }}
+      >
+        <img src={Logo} alt="KrishiSeva Logo" className="nav-logo" />
         <span className="nav-title">KrishiSeva</span>
-      </div>
+      </Link>
 
       <div className="navbar-links-container desktop-only">
         {menuOptions.map((item) => (

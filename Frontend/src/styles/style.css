@@ -15,11 +15,8 @@ body {
 .content {
   background-color: #fff;
   border-radius: 40px;
-  /* max-width: 100%; */
-  /* min-height: 480px; */
   overflow: hidden;
   position: relative;
-  /* width: 50vw; */
   margin: 4rem 15rem;
 }
 

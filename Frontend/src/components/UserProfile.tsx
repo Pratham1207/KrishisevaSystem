@@ -1,6 +1,8 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import "./UserProfile.css";
+import "../styles/UserProfile.css";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { getAuthHeaders } from "../services/authHelper";
 
 interface User {
   _id: string;
@@ -20,20 +22,21 @@ const UserProfile: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    if (userObj) {
-      const fetchProfile = async () => {
-        try {
-          const res = await fetch(
-            `${process.env.REACT_APP_BACKEND_URL}/auth/profile/${userObj._id}`
-          );
-          const data = await res.json();
-          setProfile(data);
-        } catch (err) {
-          setErrorMsg("Failed to load profile");
-        }
-      };
-      fetchProfile();
-    }
+    const fetchProfile = async () => {
+      if (!userObj) return;
+
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_BACKEND_URL}/auth/profile/${userObj._id}`,
+          { headers: getAuthHeaders() }
+        );
+        setProfile(res.data);
+      } catch (err: any) {
+        setErrorMsg(err?.response?.data?.message || "Failed to load profile");
+      }
+    };
+
+    fetchProfile();
   }, []);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,25 +48,22 @@ const UserProfile: React.FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!profile) return;
+
     setLoading(true);
     setErrorMsg(null);
 
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/auth/profile/${profile._id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: profile.name,
-            phone: profile.phone,
-            password: newPassword ? newPassword : undefined,
-          }),
-        }
-      );
-      const data = await response.json();
+      const body = {
+        name: profile.name,
+        phone: profile.phone,
+        ...(newPassword && { password: newPassword }),
+      };
 
-      if (!response.ok) throw new Error(data.message || "Update failed");
+      await axios.put(
+        `${process.env.REACT_APP_BACKEND_URL}/auth/profile/${profile._id}`,
+        body,
+        { headers: getAuthHeaders() }
+      );
 
       toast.success("Profile updated successfully!");
       if (userObj) {
@@ -73,7 +73,7 @@ const UserProfile: React.FC = () => {
         );
       }
     } catch (err: any) {
-      setErrorMsg(err.message);
+      setErrorMsg(err?.response?.data?.message || "Update failed");
     } finally {
       setLoading(false);
     }
