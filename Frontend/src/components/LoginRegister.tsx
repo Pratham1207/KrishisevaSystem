@@ -1,149 +1,222 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import axios from "axios";
+import "../styles/LoginRegister.css";
 
-const API_URL = "http://localhost:5000/api/auth";
+interface RegisterData {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  role: string;
+}
+
+interface LoginData {
+  emailOrUsername: string;
+  password: string;
+}
 
 const LoginRegister: React.FC = () => {
-  const [isLogin, setIsLogin] = useState(true); // Toggle between login/register panel
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [isRegister, setIsRegister] = useState(false);
+  const [registerData, setRegisterData] = useState<RegisterData>({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    role: "",
+  });
+  const [loginData, setLoginData] = useState<LoginData>({
+    emailOrUsername: "",
+    password: "",
+  });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   const switchContent = () => {
-    setIsLogin(!isLogin);
-    setError(""); // To clear Error when switching slider
-    setEmail("");
-    setPassword("");
-    const content = document.getElementById("content");
-    if (!content) return;
-    content.classList.toggle("active");
+    setIsRegister(!isRegister);
+    setError(null);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleRegisterChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setRegisterData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleLoginChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setLoginData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleRegisterSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setError(null);
 
-    const endpoint = isLogin ? "login" : "register";
-    const response = await fetch(`${API_URL}/${endpoint}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/auth/register`,
+        {
+          name: registerData.name,
+          phone: registerData.phone,
+          email: registerData.email,
+          password: registerData.password,
+          role: registerData.role || "farmer",
+        }
+      );
 
-    const data = await response.json();
-    setLoading(false);
-
-    if (!response.ok) {
-      setError(data.message || "Something went wrong!");
-      return;
+      toast.success("Registration successful! Please login.");
+      switchContent(); // Switch to login form
+      setRegisterData({
+        name: "",
+        email: "",
+        phone: "",
+        password: "",
+        role: "",
+      });
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || "Registration failed!";
+      toast.error(msg);
+      setError(msg);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    if (isLogin) {
-      localStorage.setItem("token", data.token);
-      alert("Login Successful!");
-      window.location.href = "/";
-    } else {
-      alert("Registration Successful! Please login.");
-      switchContent(); // Switching to login panel after succefull Registration
+  const handleLoginSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/auth/login`,
+        {
+          email: loginData.emailOrUsername,
+          password: loginData.password,
+        }
+      );
+
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+
+      toast.success("Login successful!");
+      navigate("/");
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || "Login failed!";
+      toast.error(msg);
+      setError(msg);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div
-      className="content justify-content-center align-items-center d-flex shadow-lg"
-      id="content"
-    >
-      {/* Register Form */}
-      <div className="col-md-6 d-flex justify-content-center">
-        <form onSubmit={handleSubmit}>
-          <div className="header-text mb-4">
-            <h1>Create Account</h1>
-          </div>
-          <input
-            type="email"
-            placeholder="Email"
-            className="form-control form-control-lg"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="form-control form-control-lg"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          {error && <p className="text-danger">{error}</p>}
-          <button
-            className="btn btn-primary w-50 mt-3"
-            type="submit"
-            disabled={loading}
-          >
-            {loading ? "Processing..." : "Register"}
-          </button>
-        </form>
-      </div>
+    <div className="auth-container">
+      <div className="auth-box">
+        <div className="auth-form">
+          {isRegister ? (
+            <form onSubmit={handleRegisterSubmit}>
+              <h2>Create Account</h2>
+              <p>Join Krishiseva and enhance your farming experience.</p>
+              <input
+                type="text"
+                name="name"
+                value={registerData.name}
+                onChange={handleRegisterChange}
+                placeholder="Full Name"
+                className="form-control"
+                required
+              />
+              <input
+                type="email"
+                name="email"
+                value={registerData.email}
+                onChange={handleRegisterChange}
+                placeholder="Email"
+                className="form-control"
+                required
+              />
+              <input
+                type="tel"
+                name="phone"
+                value={registerData.phone}
+                onChange={handleRegisterChange}
+                placeholder="Phone Number"
+                className="form-control"
+              />
+              <input
+                type="password"
+                name="password"
+                value={registerData.password}
+                onChange={handleRegisterChange}
+                placeholder="Password"
+                className="form-control"
+                required
+              />
+              <select
+                name="role"
+                value={registerData.role}
+                onChange={handleRegisterChange}
+                className="form-control"
+                required
+              >
+                <option value="" disabled>
+                  Choose Your Role
+                </option>
+                <option value="farmer">Farmer</option>
+                <option value="admin">Admin</option>
+                <option value="csowner">Cold Storage Owner</option>
+              </select>
+              {error && <p className="error-message">{error}</p>}
+              <button className="btn btn-success" disabled={loading}>
+                {loading ? "Registering..." : "Register"}
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleLoginSubmit}>
+              <h2>Sign In</h2>
+              <p>Access your Krishiseva account.</p>
+              <input
+                type="text"
+                name="emailOrUsername"
+                value={loginData.emailOrUsername}
+                onChange={handleLoginChange}
+                placeholder="Email"
+                className="form-control"
+                required
+              />
+              <input
+                type="password"
+                name="password"
+                value={loginData.password}
+                onChange={handleLoginChange}
+                placeholder="Password"
+                className="form-control"
+                required
+              />
+              {error && <p className="error-message">{error}</p>}
+              <button className="btn btn-primary" disabled={loading}>
+                {loading ? "Logging in..." : "Login"}
+              </button>
+            </form>
+          )}
+        </div>
 
-      {/* Login Form */}
-      <div className="col-md-6 right-box">
-        <form onSubmit={handleSubmit}>
-          <div className="header-text mb-4">
-            <h1>Sign In</h1>
-          </div>
-          <input
-            type="email"
-            placeholder="Email"
-            className="form-control form-control-lg"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="form-control form-control-lg"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          {error && <p className="text-danger">{error}</p>}
-          <div className="d-flex justify-content-between mt-2">
-            <div className="form-check">
-              <input type="checkbox" className="form-check-input" />
-              <label className="form-check-label">Remember me</label>
-            </div>
-            <a href="#">Forgot Password?</a>
-          </div>
-          <button
-            className="btn btn-primary w-50 mt-3"
-            type="submit"
-            disabled={loading}
-          >
-            {loading ? "Processing..." : "Login"}
+        <div className="auth-switch">
+          <h1>{isRegister ? "Welcome Back!" : "Hello!"}</h1>
+          <p>
+            {isRegister
+              ? "Already have an account? Login now!"
+              : "New to Krishiseva? Register and explore more!"}
+          </p>
+          <button className="btn btn-secondary" onClick={switchContent}>
+            {isRegister ? "Login" : "Register"}
           </button>
-        </form>
-      </div>
-
-      {/* Sliding Panel */}
-      <div className="switch-content">
-        <div className="switch">
-          <div className="switch-panel switch-left">
-            <h1>Hello, Again</h1>
-            <p>We are happy to see you back</p>
-            <button className="btn btn-secondary w-50" onClick={switchContent}>
-              Login
-            </button>
-          </div>
-          <div className="switch-panel switch-right">
-            <h1>Welcome</h1>
-            <p>Join Our Unique Platform, Explore a New Experience</p>
-            <button className="btn btn-secondary w-50" onClick={switchContent}>
-              Register
-            </button>
-          </div>
         </div>
       </div>
     </div>

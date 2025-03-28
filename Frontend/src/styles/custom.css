@@ -22,101 +22,11 @@ body {
   background-color: #f6f6f6;
 }
 
-/*Navbar*/
-
-/* General Navbar Styling */
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 90px;
-}
-
-.navbar-links-container {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-/* Navbar Links */
-.navbar-links-container a {
-  margin-right: 2rem;
-  text-decoration: none;
-  color: black;
-  font-size: 1.1rem;
-  font-weight: 600;
-  transition: color 0.2s ease-in-out;
-}
-
-.navbar-links-container a:hover,
-.navbar-links-container .dropdown-button:hover {
-  color: green;
-}
-
-/* "Other" Dropdown */
-.navbar-links-container .dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.navbar-links-container .dropdown-button {
-  background: none;
-  border: none;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  color: black;
-  transition: color 0.2s ease-in-out;
-  text-transform: none !important;
-}
-
-/* Mobile Menu Button */
-.navbar-menu-container {
-  display: none;
-}
-
-/* Primary Button */
-.primary-button {
-  padding: 0.8rem 1.5rem;
-  background-color: white;
-  border: 2px solid green;
-  border-radius: 5rem;
-  font-size: 1rem;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s ease-in-out;
-  margin-right: 10px;
-}
-
-.primary-button:hover {
-  background-color: green;
-  color: white;
-}
-
-/* Logo Styling */
-.nav-logo-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.nav-logo-container img {
-  width: 70px;
-  height: auto;
-}
-
-.nav-title {
-  font-size: 20px;
-  font-weight: bold;
-  color: green;
-}
-
 /*footer*/
 
 .footer-wrapper {
-  margin: 6rem 0rem;
+  margin: 4rem 0rem;
   display: flex;
-  margin-top: 10rem;
 }
 .footer-logo-container {
   max-width: 110px;
@@ -541,10 +451,10 @@ body {
 }
 
 @media (max-width: 1000px) {
-  .navbar-links-container a {
+  /* .navbar-links-container a {
     margin-right: 1rem;
     font-size: 1rem;
-  }
+  } */
   .primary-button {
     font-size: 1rem;
   }
@@ -556,12 +466,12 @@ body {
   .nav-logo-container {
     max-width: 140px;
   }
-  .navbar-links-container {
+  /* .navbar-links-container {
     display: none;
   }
   .navbar-menu-container {
     display: flex;
-  }
+  } */
   .home-bannerImage-container {
     max-width: 450px;
   }
@@ -979,17 +889,6 @@ textarea {
   display: flex;
   justify-content: space-between;
   gap: 20px;
-}
-
-/* Grid Layout - Image Left, Content Right */
-.content-grid {
-  display: flex;
-  align-items: center;
-  background: #fff;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  width: 70%;
 }
 
 /* Cold Storage Image Styling */

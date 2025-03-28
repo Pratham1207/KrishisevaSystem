@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
   try {
-    const { email, password, role = "farmer" } = req.body;
+    const { name, email, phone, password, role = "farmer" } = req.body;
 
     // Checking if user already exists
     const existingUser = await User.findOne({ email });
@@ -25,7 +25,7 @@ const register = async (req, res) => {
     }
 
     // Create User
-    const newUser = new User({ email, password, role });
+    const newUser = new User({ name, phone, email, password, role });
     await newUser.save();
 
     res.status(201).json({ message: "User registered successfully" });
@@ -56,10 +56,51 @@ const login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "1W" }
     );
-    res.json({ message: "Login successful", token });
+    res.json({
+      message: "Login successful",
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-module.exports = { register, login };
+// Get user profile
+const getProfile = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// Update user profile
+const updateProfile = async (req, res) => {
+  try {
+    const { name, phone, password } = req.body;
+    const userId = req.params.id;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (name) user.name = name;
+    if (phone) user.phone = phone;
+    if (password) user.password = password;
+
+    await user.save();
+    res.json({ message: "Profile updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+module.exports = { register, login, getProfile, updateProfile };

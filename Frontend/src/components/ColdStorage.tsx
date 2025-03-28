@@ -1,7 +1,7 @@
 import React from "react";
 import BannerImage from "../Assets/banner.png";
 import ColdStorageImage from "../Assets/coldstorage1.png";
-import "./ColdStorage.css";
+import "../styles/ColdStorage.css";
 
 const ColdStorage: React.FC = () => {
   return (

@@ -1,4 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 interface FormData {
   name: string;
@@ -14,8 +16,6 @@ const ContactUs: React.FC = () => {
   });
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [success, setSuccess] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -27,32 +27,19 @@ const ContactUs: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setSuccess(null);
-    setError(null);
 
     try {
-      const response = await fetch("http://localhost:5000/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Something went wrong!");
-      }
-
-      setSuccess(
-        "Thank you for contacting us! We will get back to you shortly."
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/contact`,
+        formData
       );
+
+      toast.success("Thank you for contacting us! We'll get back to you soon.");
       setFormData({ name: "", email: "", message: "" }); // Clear form
-      setLoading(false);
     } catch (err: any) {
-      setError(err.message || "Failed to send message.");
-      setLoading(false);
+      const errorMsg =
+        err?.response?.data?.message || "Failed to send message.";
+      toast.error(errorMsg);
     }
   };
 
@@ -70,9 +57,6 @@ const ContactUs: React.FC = () => {
         Our team strives to respond to all inquiries within 48 hours. We look
         forward to hearing from you.
       </p>
-
-      {success && <p className="success-message">{success}</p>}
-      {error && <p className="error-message">{error}</p>}
 
       <form onSubmit={handleSubmit} className="contact-form">
         <div className="form-group">
