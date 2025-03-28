@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import axios from "axios";
+import "../styles/SoilDashboard.css";
 
 interface SoilData {
   humidity: number;
@@ -14,110 +17,124 @@ const SoilDataDashboard: React.FC = () => {
 
   const fetchSoilData = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/soildata/all");
-      const data = await res.json();
-
-      setSoilData(data);
-      if (data.length > 0) {
-        setLatestData(data[0]);
+      const res = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/soildata/all`
+      );
+      setSoilData(res.data);
+      if (res.data.length > 0) {
+        setLatestData(res.data[0]);
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching soil data:", error);
     }
   };
+
   useEffect(() => {
     fetchSoilData();
     const interval = setInterval(fetchSoilData, 5000);
-
     return () => clearInterval(interval);
   }, []);
-  console.log("latestData", latestData);
+
+  const columns: GridColDef[] = [
+    { field: "humidity", headerName: "Humidity (%)", flex: 1 },
+    { field: "temperature", headerName: "Temperature (°C)", flex: 1 },
+    { field: "moisture", headerName: "Moisture", flex: 1 },
+    {
+      field: "timestamp",
+      headerName: "Timestamp",
+      flex: 2,
+      valueFormatter: (params) => {
+        const rawTimestamp = params;
+        const date = new Date(rawTimestamp);
+        return isNaN(date.getTime()) ? "Invalid Date" : date.toLocaleString();
+      },
+    },
+  ];
+
+  const rows = soilData.map((item, index) => ({ id: index, ...item }));
+
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Soil Monitoring Dashboard</h1>
+    <div className="soil-dashboard-container" aria-label="Soil Data Dashboard">
+      <h1 className="dashboard-title">Soil Monitoring Dashboard</h1>
+
       {latestData && (
-        <div className="flex-row">
-          <div className="gauge-card bg-white p-4 rounded shadow">
-            <h3 className="text-center mb-2">Humidity</h3>
+        <div className="gauge-grid">
+          <div className="gauge-card" aria-label="Humidity Gauge">
+            <h3>Humidity</h3>
             <Gauge
               value={latestData.humidity}
               startAngle={-110}
               endAngle={110}
-              sx={{
-                [`& .${gaugeClasses.valueText}`]: {
-                  fontSize: 40,
-                  transform: "translate(0px, 0px)",
-                },
-              }}
               valueMin={0}
               valueMax={100}
               height={200}
+              sx={{
+                [`& .${gaugeClasses.valueText}`]: {
+                  fontSize: 30,
+                  transform: "translate(0px, 0px)",
+                },
+              }}
               text={({ value, valueMax }) => `${value} / ${valueMax}`}
             />
           </div>
-          <div className="gauge-card bg-white p-4 rounded shadow">
-            <h3 className="text-center mb-2">Temperature (°C)</h3>
+          <div className="gauge-card" aria-label="Temperature Gauge">
+            <h3>Temperature</h3>
             <Gauge
               value={latestData.temperature}
               startAngle={-110}
               endAngle={110}
+              valueMin={0}
+              valueMax={50}
               height={200}
               sx={{
                 [`& .${gaugeClasses.valueText}`]: {
-                  fontSize: 40,
+                  fontSize: 30,
                   transform: "translate(0px, 0px)",
                 },
               }}
-              valueMin={0}
-              valueMax={50}
               text={({ value, valueMax }) => `${value} / ${valueMax}`}
             />
           </div>
-          <div className="gauge-card bg-white p-4 rounded shadow">
-            <h3 className="text-center mb-2">Soil Moisture</h3>
+          <div className="gauge-card" aria-label="Soil Moisture Gauge">
+            <h3>Soil Moisture</h3>
             <Gauge
               value={latestData.moisture}
               startAngle={-110}
               endAngle={110}
+              valueMin={0}
+              valueMax={1024}
               height={200}
               sx={{
                 [`& .${gaugeClasses.valueText}`]: {
-                  fontSize: 40,
+                  fontSize: 30,
                   transform: "translate(0px, 0px)",
                 },
               }}
-              valueMin={0}
-              valueMax={1024}
               text={({ value, valueMax }) => `${value} / ${valueMax}`}
             />
           </div>
         </div>
       )}
 
-      <h2 className="text-xl font-semibold mb-3">All Soil Data Records</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white rounded shadow">
-          <thead>
-            <tr>
-              <th className="py-2 px-4 border-b">Humidity (%)</th>
-              <th className="py-2 px-4 border-b">Temperature (°C)</th>
-              <th className="py-2 px-4 border-b">Moisture</th>
-              <th className="py-2 px-4 border-b">Timestamp</th>
-            </tr>
-          </thead>
-          <tbody>
-            {soilData?.map((entry, index) => (
-              <tr key={index} className="text-center">
-                <td className="py-2 px-4 border-b">{entry.humidity}</td>
-                <td className="py-2 px-4 border-b">{entry.temperature}</td>
-                <td className="py-2 px-4 border-b">{entry.moisture}</td>
-                <td className="py-2 px-4 border-b">
-                  {new Date(entry.timestamp).toLocaleString()}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <h2 className="text-xl fw-bold mb-3">All Soil Data Records</h2>
+      <div className="table-responsive">
+        <div className="min-width-600">
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            pageSizeOptions={[25, 50, 75, 100]}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 25,
+                  page: 0,
+                },
+              },
+            }}
+            autoHeight
+            className="bg-white rounded shadow"
+          />
+        </div>
       </div>
     </div>
   );

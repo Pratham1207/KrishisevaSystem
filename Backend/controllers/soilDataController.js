@@ -1,8 +1,18 @@
 const SoilData = require("../models/SoilData");
+const sendAlertNotification = require("../utils/sendNotification");
 
 const postSoilData = async (req, res) => {
   try {
     const { humidity, temperature, moisture } = req.body;
+    const MOISTURE_THRESHOLD = 800;
+    if (moisture > MOISTURE_THRESHOLD) {
+      sendAlertNotification(
+        "yashpancholi001@gmail.com",
+        "+12268997572",
+        moisture
+      );
+    }
+
     const data = new SoilData({ humidity, temperature, moisture });
     await data.save();
     res.status(200).json({ message: "Soil data saved successfully" });
