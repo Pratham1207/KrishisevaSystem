@@ -8,6 +8,7 @@ import AboutUs from "./AboutUs";
 import ContactUs from "./ContactUs";
 import PlantDetail from "./PlantDetail";
 import ColdStorage from "./ColdStorage";
+import SoilDataDashboard from "./SoilDataDemo";
 import UserProfile from "./UserProfile";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -29,6 +30,7 @@ const App: React.FC = () => {
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/plant-details" element={<PlantDetail />} />
           <Route path="/cold-storage" element={<ColdStorage />} />
+          <Route path="/soil-data-demo" element={<SoilDataDashboard />} />
           <Route path="/profile" element={<UserProfile />} />
 
           <Route path="*" element={<PageNotFound />} />
