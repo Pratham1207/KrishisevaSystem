@@ -2,11 +2,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+
 const authRoutes = require("./routes/authRoutes");
 const fertilizerRoutes = require("./routes/fertilizerRoutes");
 const pesticideRoutes = require("./routes/pesticideRoutes");
 const contactUsRoute = require("./routes/contactUsRoute");
 const soilDataRoutes = require("./routes/soilDataRoutes");
+const soilRoutes = require("./routes/soilRoutes");
+const insectRoutes = require("./routes/insectRoutes");
 
 require("dotenv").config();
 
@@ -28,6 +31,8 @@ app.use("/fertilizers", fertilizerRoutes);
 app.use("/pesticides", pesticideRoutes);
 app.use("/contact", contactUsRoute);
 app.use("/soildata", soilDataRoutes);
+app.use("/soil", soilRoutes);
+app.use("/insects", insectRoutes);
 
 // Listening Server
 const PORT = process.env.PORT || 5000;
