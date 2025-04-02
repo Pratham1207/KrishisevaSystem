@@ -103,4 +103,29 @@ const updateProfile = async (req, res) => {
   }
 };
 
-module.exports = { register, login, getProfile, updateProfile };
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({}, "-password");
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.json({ message: "User deleted" });
+  } catch (err) {
+    res.status(500).json({ message: "Delete failed" });
+  }
+};
+
+module.exports = {
+  register,
+  login,
+  getProfile,
+  updateProfile,
+  getAllUsers,
+  deleteUser,
+};

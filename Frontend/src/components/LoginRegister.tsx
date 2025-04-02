@@ -169,7 +169,6 @@ const LoginRegister: React.FC = () => {
                   Choose Your Role
                 </option>
                 <option value="farmer">Farmer</option>
-                <option value="admin">Admin</option>
                 <option value="csowner">Cold Storage Owner</option>
               </select>
               {error && <p className="error-message">{error}</p>}

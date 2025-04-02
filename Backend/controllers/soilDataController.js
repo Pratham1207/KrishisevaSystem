@@ -8,7 +8,7 @@ const postSoilData = async (req, res) => {
     if (moisture > MOISTURE_THRESHOLD) {
       sendAlertNotification(
         "yashpancholi001@gmail.com",
-        "+12268997572",
+        "+13828850314",
         moisture
       );
     }
