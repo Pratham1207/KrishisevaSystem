@@ -10,6 +10,7 @@ const contactUsRoute = require("./routes/contactUsRoute");
 const soilDataRoutes = require("./routes/soilDataRoutes");
 const soilRoutes = require("./routes/soilRoutes");
 const insectRoutes = require("./routes/insectRoutes");
+const faqRoutes = require("./routes/faqRoutes");
 
 require("dotenv").config();
 
@@ -33,6 +34,7 @@ app.use("/contact", contactUsRoute);
 app.use("/soildata", soilDataRoutes);
 app.use("/soil", soilRoutes);
 app.use("/insects", insectRoutes);
+app.use("/faqs", faqRoutes);
 
 // Listening Server
 const PORT = process.env.PORT || 5000;

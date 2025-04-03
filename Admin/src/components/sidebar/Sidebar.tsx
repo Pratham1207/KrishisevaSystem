@@ -6,9 +6,14 @@ import logo from "../../assets/logo.png";
 
 import { BsQuestionCircle } from "react-icons/bs";
 import { PiPlantFill } from "react-icons/pi";
-import { FaSunPlantWilt, FaUsers } from "react-icons/fa6";
+import { FaUsers } from "react-icons/fa6";
 import { GiFertilizerBag, GiMedicinePills } from "react-icons/gi";
-import { MdOutlineDirtyLens, MdQuestionAnswer } from "react-icons/md";
+import {
+  MdOutlineDirtyLens,
+  MdQuestionAnswer,
+  MdOutlineMessage,
+} from "react-icons/md";
+import { FcBusinessContact } from "react-icons/fc";
 import { SiSwarm } from "react-icons/si";
 import { TbBrandBooking } from "react-icons/tb";
 
@@ -69,6 +74,12 @@ const Sidebar: React.FC = () => {
             <Link to="/user" className="menuLink flex">
               <FaUsers className="icon" />
               <span className="smallText">User</span>
+            </Link>
+          </li>
+          <li className="listItem">
+            <Link to="/contact-messages" className="menuLink flex">
+              <MdOutlineMessage className="icon" />
+              <span className="smallText">Contact Us</span>
             </Link>
           </li>
         </ul>

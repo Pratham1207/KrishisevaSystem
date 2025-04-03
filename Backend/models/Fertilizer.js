@@ -6,6 +6,10 @@ const FertilizerSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  type: {
+    type: String,
+    required: true,
+  },
   quantity: {
     type: Number,
     required: true,
@@ -14,6 +18,10 @@ const FertilizerSchema = new mongoose.Schema({
     type: String,
     enum: ["kg", "g", "ton", "lb"],
     default: "kg",
+  },
+  price: {
+    type: String,
+    required: true,
   },
 });
 

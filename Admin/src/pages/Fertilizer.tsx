@@ -1,5 +1,5 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
-import "../styles/Fertilizer.css";
+import React, { useEffect, useState, ChangeEvent, FormEvent } from "react";
+import axios from "axios";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { BiSearchAlt } from "react-icons/bi";
 import { TbMessageCircle } from "react-icons/tb";
@@ -7,55 +7,66 @@ import { MdOutlineNotificationsNone } from "react-icons/md";
 import img from "../assets/user.png";
 
 interface Fertilizer {
-  id: number;
+  _id?: string;
   name: string;
   type: string;
   quantity: string;
+  unit: string;
   price: string;
 }
 
 const Fertilizer: React.FC = () => {
-  const [fertilizers, setFertilizers] = useState<Fertilizer[]>([
-    { id: 1, name: "Urea", type: "Nitrogen", quantity: "50 kg", price: "$30" },
-    { id: 2, name: "DAP", type: "Phosphorus", quantity: "40 kg", price: "$45" },
-    { id: 3, name: "MOP", type: "Potassium", quantity: "30 kg", price: "$25" },
-  ]);
-
-  const [formData, setFormData] = useState<
-    Omit<Fertilizer, "id"> & { id: number | null }
-  >({
-    id: null,
+  const [fertilizers, setFertilizers] = useState<Fertilizer[]>([]);
+  const [formData, setFormData] = useState<Fertilizer>({
     name: "",
     type: "",
     quantity: "",
+    unit: "",
     price: "",
   });
 
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [showForm, setShowForm] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const fetchFertilizers = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/fertilizers");
+      setFertilizers(res.data);
+    } catch (error) {
+      console.error("Error fetching fertilizers:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFertilizers();
+  }, []);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (isEditing && formData.id !== null) {
-      setFertilizers((prev) =>
-        prev.map((f) =>
-          f.id === formData.id ? { ...formData, id: formData.id } : f
-        )
-      );
-      setIsEditing(false);
-    } else {
-      const newId =
-        fertilizers.length > 0 ? fertilizers[fertilizers.length - 1].id + 1 : 1;
-      setFertilizers((prev) => [...prev, { ...formData, id: newId }]);
-    }
 
-    setShowForm(false);
-    setFormData({ id: null, name: "", type: "", quantity: "", price: "" });
+    try {
+      if (isEditing && formData._id) {
+        await axios.put(
+          `http://localhost:5000/fertilizers/update/${formData._id}`,
+          formData
+        );
+      } else {
+        await axios.post("http://localhost:5000/fertilizers/add", formData);
+      }
+
+      setIsEditing(false);
+      setShowForm(false);
+      setFormData({ name: "", type: "", quantity: "", unit: "", price: "" });
+      fetchFertilizers();
+    } catch (error) {
+      console.error("Error saving fertilizer:", error);
+    }
   };
 
   const handleEdit = (fertilizer: Fertilizer) => {
@@ -64,8 +75,19 @@ const Fertilizer: React.FC = () => {
     setShowForm(true);
   };
 
-  const handleDelete = (id: number) => {
-    setFertilizers((prev) => prev.filter((f) => f.id !== id));
+  const handleDelete = async (id?: string) => {
+    if (!id) return;
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this fertilizer?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await axios.delete(`http://localhost:5000/fertilizers/delete/${id}`);
+      fetchFertilizers();
+    } catch (error) {
+      console.error("Error deleting fertilizer:", error);
+    }
   };
 
   return (
@@ -78,7 +100,12 @@ const Fertilizer: React.FC = () => {
         </div>
 
         <div className="searchBar flex">
-          <input type="text" placeholder="Search Dashboard" />
+          <input
+            type="text"
+            placeholder="Search Fertilizer"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
           <BiSearchAlt className="icon" />
         </div>
 
@@ -99,7 +126,6 @@ const Fertilizer: React.FC = () => {
           <FaPlus /> Add Fertilizer
         </button>
 
-        {/* Form */}
         {showForm && (
           <div className="form-container">
             <h3>{isEditing ? "Edit Fertilizer" : "Add Fertilizer"}</h3>
@@ -130,6 +156,14 @@ const Fertilizer: React.FC = () => {
               />
               <input
                 type="text"
+                name="unit"
+                placeholder="Unit (e.g., kg, L)"
+                value={formData.unit}
+                onChange={handleChange}
+                required
+              />
+              <input
+                type="text"
                 name="price"
                 placeholder="Price"
                 value={formData.price}
@@ -153,34 +187,40 @@ const Fertilizer: React.FC = () => {
                 <th>Name</th>
                 <th>Type</th>
                 <th>Quantity</th>
+                <th>Unit</th>
                 <th>Price</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {fertilizers.map((fertilizer) => (
-                <tr key={fertilizer.id}>
-                  <td>{fertilizer.id}</td>
-                  <td>{fertilizer.name}</td>
-                  <td>{fertilizer.type}</td>
-                  <td>{fertilizer.quantity}</td>
-                  <td>{fertilizer.price}</td>
-                  <td className="action-buttons">
-                    <button
-                      className="edit-btn"
-                      onClick={() => handleEdit(fertilizer)}
-                    >
-                      <FaEdit /> Edit
-                    </button>
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDelete(fertilizer.id)}
-                    >
-                      <FaTrash /> Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {fertilizers
+                .filter((f) =>
+                  f.name.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((fertilizer, index) => (
+                  <tr key={fertilizer._id}>
+                    <td>{index + 1}</td>
+                    <td>{fertilizer.name}</td>
+                    <td>{fertilizer.type}</td>
+                    <td>{fertilizer.quantity}</td>
+                    <td>{fertilizer.unit}</td>
+                    <td>{fertilizer.price}</td>
+                    <td className="action-buttons">
+                      <button
+                        className="edit-btn"
+                        onClick={() => handleEdit(fertilizer)}
+                      >
+                        <FaEdit /> Edit
+                      </button>
+                      <button
+                        className="delete-btn"
+                        onClick={() => handleDelete(fertilizer._id)}
+                      >
+                        <FaTrash /> Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

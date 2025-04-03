@@ -1,5 +1,5 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
-import "../styles/Pesticides.css";
+import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import axios from "axios";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { BiSearchAlt } from "react-icons/bi";
 import { TbMessageCircle } from "react-icons/tb";
@@ -7,72 +7,62 @@ import { MdOutlineNotificationsNone } from "react-icons/md";
 import img from "../assets/user.png";
 
 interface Pesticide {
-  id: number;
+  _id?: string;
   name: string;
-  type: string;
-  quantity: string;
-  price: string;
+  dose: string;
+  description: string;
 }
 
 const Pesticides: React.FC = () => {
-  const [pesticides, setPesticides] = useState<Pesticide[]>([
-    {
-      id: 1,
-      name: "Malathion",
-      type: "Insecticide",
-      quantity: "5 Liters",
-      price: "$40",
-    },
-    {
-      id: 2,
-      name: "Chlorpyrifos",
-      type: "Insecticide",
-      quantity: "3 Liters",
-      price: "$35",
-    },
-    {
-      id: 3,
-      name: "Glyphosate",
-      type: "Herbicide",
-      quantity: "10 Liters",
-      price: "$50",
-    },
-  ]);
-
-  const [formData, setFormData] = useState<
-    Omit<Pesticide, "id"> & { id: number | null }
-  >({
-    id: null,
+  const [pesticides, setPesticides] = useState<Pesticide[]>([]);
+  const [formData, setFormData] = useState<Pesticide>({
     name: "",
-    type: "",
-    quantity: "",
-    price: "",
+    dose: "",
+    description: "",
   });
 
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [showForm, setShowForm] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [search, setSearch] = useState("");
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const API_BASE = "http://localhost:5000/pesticides";
+
+  const fetchPesticides = async () => {
+    try {
+      const response = await axios.get(API_BASE);
+      setPesticides(response.data);
+    } catch (error) {
+      console.error("Error fetching pesticides:", error);
+    }
   };
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (isEditing && formData.id !== null) {
-      setPesticides((prev) =>
-        prev.map((p) =>
-          p.id === formData.id ? { ...formData, id: formData.id } : p
-        )
-      );
-      setIsEditing(false);
-    } else {
-      const newId =
-        pesticides.length > 0 ? pesticides[pesticides.length - 1].id + 1 : 1;
-      setPesticides((prev) => [...prev, { ...formData, id: newId }]);
-    }
+  useEffect(() => {
+    fetchPesticides();
+  }, []);
 
-    setFormData({ id: null, name: "", type: "", quantity: "", price: "" });
-    setShowForm(false);
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    try {
+      if (isEditing && formData._id) {
+        await axios.put(`${API_BASE}/update/${formData._id}`, formData);
+      } else {
+        await axios.post(`${API_BASE}/add`, formData);
+      }
+
+      fetchPesticides();
+      setFormData({ name: "", dose: "", description: "" });
+      setShowForm(false);
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error saving pesticide:", error);
+    }
   };
 
   const handleEdit = (pesticide: Pesticide) => {
@@ -81,8 +71,19 @@ const Pesticides: React.FC = () => {
     setShowForm(true);
   };
 
-  const handleDelete = (id: number) => {
-    setPesticides((prev) => prev.filter((p) => p.id !== id));
+  const handleDelete = async (id?: string) => {
+    if (!id) return;
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this pesticide?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await axios.delete(`${API_BASE}/delete/${id}`);
+      fetchPesticides();
+    } catch (error) {
+      console.error("Error deleting pesticide:", error);
+    }
   };
 
   return (
@@ -95,7 +96,12 @@ const Pesticides: React.FC = () => {
         </div>
 
         <div className="searchBar flex">
-          <input type="text" placeholder="Search Dashboard" />
+          <input
+            type="text"
+            placeholder="Search Pesticide"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
           <BiSearchAlt className="icon" />
         </div>
 
@@ -124,32 +130,23 @@ const Pesticides: React.FC = () => {
               <input
                 type="text"
                 name="name"
-                placeholder="Name"
+                placeholder="Pesticide Name"
                 value={formData.name}
                 onChange={handleChange}
                 required
               />
               <input
                 type="text"
-                name="type"
-                placeholder="Type"
-                value={formData.type}
+                name="dose"
+                placeholder="Dose"
+                value={formData.dose}
                 onChange={handleChange}
                 required
               />
-              <input
-                type="text"
-                name="quantity"
-                placeholder="Quantity"
-                value={formData.quantity}
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="text"
-                name="price"
-                placeholder="Price"
-                value={formData.price}
+              <textarea
+                name="description"
+                placeholder="Description"
+                value={formData.description}
                 onChange={handleChange}
                 required
               />
@@ -168,36 +165,38 @@ const Pesticides: React.FC = () => {
               <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Type</th>
-                <th>Quantity</th>
-                <th>Price</th>
+                <th>Dose</th>
+                <th>Description</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {pesticides.map((pesticide) => (
-                <tr key={pesticide.id}>
-                  <td>{pesticide.id}</td>
-                  <td>{pesticide.name}</td>
-                  <td>{pesticide.type}</td>
-                  <td>{pesticide.quantity}</td>
-                  <td>{pesticide.price}</td>
-                  <td className="action-buttons">
-                    <button
-                      className="edit-btn"
-                      onClick={() => handleEdit(pesticide)}
-                    >
-                      <FaEdit /> Edit
-                    </button>
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDelete(pesticide.id)}
-                    >
-                      <FaTrash /> Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {pesticides
+                .filter((p) =>
+                  p.name.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((pesticide, index) => (
+                  <tr key={pesticide._id}>
+                    <td>{index + 1}</td>
+                    <td>{pesticide.name}</td>
+                    <td>{pesticide.dose}</td>
+                    <td>{pesticide.description}</td>
+                    <td className="action-buttons">
+                      <button
+                        className="edit-btn"
+                        onClick={() => handleEdit(pesticide)}
+                      >
+                        <FaEdit /> Edit
+                      </button>
+                      <button
+                        className="delete-btn"
+                        onClick={() => handleDelete(pesticide._id)}
+                      >
+                        <FaTrash /> Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
