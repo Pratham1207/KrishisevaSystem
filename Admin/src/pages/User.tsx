@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "../styles/User.css";
 import { FaTrash } from "react-icons/fa";
 import { BiSearchAlt } from "react-icons/bi";
 import { TbMessageCircle } from "react-icons/tb";
@@ -80,7 +79,7 @@ const User: React.FC = () => {
           <table>
             <thead>
               <tr>
-                <th>#</th>
+                <th>ID</th>
                 <th>Name</th>
                 <th>Contact</th>
                 <th>Email</th>

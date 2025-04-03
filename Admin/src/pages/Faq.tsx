@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "../styles/Faq.css";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { BiSearchAlt } from "react-icons/bi";
@@ -7,70 +8,64 @@ import { MdOutlineNotificationsNone } from "react-icons/md";
 import img from "../assets/user.png";
 
 interface FaqItem {
-  id: number;
+  _id?: string;
   question: string;
   answer: string;
 }
 
 const Faq: React.FC = () => {
-  const [faqs, setFaqs] = useState<FaqItem[]>([
-    {
-      id: 1,
-      question: "What is Krishiseva?",
-      answer:
-        "Krishiseva is a platform that provides agricultural solutions to farmers and stakeholders.",
-    },
-    {
-      id: 2,
-      question: "How to contact support?",
-      answer:
-        "You can reach our support team via email at support@krishiseva.com or call +91-9876543210.",
-    },
-    {
-      id: 3,
-      question: "What services do you provide?",
-      answer:
-        "We provide agricultural insights, soil analysis, fertilizer recommendations, and cold storage management.",
-    },
-  ]);
-
-  const [formData, setFormData] = useState<
-    Omit<FaqItem, "id"> & { id: number | null }
-  >({
-    id: null,
+  const [faqs, setFaqs] = useState<FaqItem[]>([]);
+  const [formData, setFormData] = useState<FaqItem>({
     question: "",
     answer: "",
   });
+  const [isEditing, setIsEditing] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [showForm, setShowForm] = useState<boolean>(false);
+  const fetchFaqs = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/faqs`
+      );
+      setFaqs(response.data);
+    } catch (error) {
+      console.error("Error fetching FAQs:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFaqs();
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isEditing) {
-      setFaqs((prev) =>
-        prev.map((faq) =>
-          faq.id === formData.id ? (formData as FaqItem) : faq
-        )
-      );
+
+    try {
+      if (isEditing && formData._id) {
+        await axios.put(
+          `${process.env.REACT_APP_BACKEND_URL}/faqs/update/${formData._id}`,
+          formData
+        );
+      } else {
+        await axios.post(
+          `${process.env.REACT_APP_BACKEND_URL}/faqs/add`,
+          formData
+        );
+      }
+
+      setShowForm(false);
       setIsEditing(false);
-    } else {
-      const newFaq: FaqItem = {
-        id: faqs.length + 1,
-        question: formData.question,
-        answer: formData.answer,
-      };
-      setFaqs([...faqs, newFaq]);
+      setFormData({ question: "", answer: "" });
+      fetchFaqs();
+    } catch (error) {
+      console.error("Error submitting FAQ:", error);
     }
-    setFormData({ id: null, question: "", answer: "" });
-    setShowForm(false);
   };
 
   const handleEdit = (faq: FaqItem) => {
@@ -79,8 +74,16 @@ const Faq: React.FC = () => {
     setShowForm(true);
   };
 
-  const handleDelete = (id: number) => {
-    setFaqs((prev) => prev.filter((faq) => faq.id !== id));
+  const handleDelete = async (id?: string) => {
+    if (!id) return;
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_BACKEND_URL}/faqs/delete/${id}`
+      );
+      fetchFaqs();
+    } catch (error) {
+      console.error("Error deleting FAQ:", error);
+    }
   };
 
   return (
@@ -150,9 +153,9 @@ const Faq: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {faqs.map((faq) => (
-                <tr key={faq.id}>
-                  <td>{faq.id}</td>
+              {faqs.map((faq, index) => (
+                <tr key={faq._id}>
+                  <td>{index + 1}</td>
                   <td>{faq.question}</td>
                   <td>{faq.answer}</td>
                   <td className="action-buttons">
@@ -164,7 +167,7 @@ const Faq: React.FC = () => {
                     </button>
                     <button
                       className="delete-btn"
-                      onClick={() => handleDelete(faq.id)}
+                      onClick={() => handleDelete(faq._id)}
                     >
                       <FaTrash /> Delete
                     </button>

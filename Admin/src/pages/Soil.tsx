@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "../styles/Soil.css";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { BiSearchAlt } from "react-icons/bi";
 import { TbMessageCircle } from "react-icons/tb";

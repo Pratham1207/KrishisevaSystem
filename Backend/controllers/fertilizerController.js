@@ -2,14 +2,14 @@ const Fertilizer = require("../models/Fertilizer");
 
 const addFertilizer = async (req, res) => {
   try {
-    const { name, quantity, unit } = req.body;
+    const { name, type, quantity, unit, price } = req.body;
 
     const existingFertilizer = await Fertilizer.findOne({ name });
     if (existingFertilizer) {
       return res.status(400).json({ message: "Fertilizer already exists" });
     }
 
-    const newFertilizer = new Fertilizer({ name, quantity, unit });
+    const newFertilizer = new Fertilizer({ name, type, quantity, unit, price });
     await newFertilizer.save();
     res
       .status(201)

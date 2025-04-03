@@ -17,7 +17,7 @@ import Warm from "./pages/Warm";
 import ColdStoragePage from "./pages/ColdStorage";
 import Faq from "./pages/Faq";
 import User from "./pages/User";
-
+import ContactUs from "./pages/ContactUs";
 const MainLayout: React.FC = () => {
   const location = useLocation();
 
@@ -36,6 +36,7 @@ const MainLayout: React.FC = () => {
         <Route path="/coldStorage" element={<ColdStoragePage />} />
         <Route path="/faqs" element={<Faq />} />
         <Route path="/user" element={<User />} />
+        <Route path="/contact-messages" element={<ContactUs />} />
       </Routes>
     </div>
   );

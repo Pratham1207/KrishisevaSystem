@@ -4,7 +4,6 @@ import { BiSearchAlt } from "react-icons/bi";
 import { TbMessageCircle } from "react-icons/tb";
 import { MdOutlineNotificationsNone } from "react-icons/md";
 import img from "../assets/user.png";
-import "../styles/ColdStorage.css";
 
 interface ColdStorageItem {
   id: number;
