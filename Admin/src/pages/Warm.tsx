@@ -11,6 +11,7 @@ import {
   updateInsect,
   deleteInsect,
 } from "../api/insectAPI";
+import Header from "../components/Header";
 
 interface Insect {
   _id?: string;
@@ -75,25 +76,7 @@ const Warm: React.FC = () => {
 
   return (
     <div className="plant-page-wrapper">
-      <div className="headerSection flex">
-        <div className="title">
-          <h1>Welcome to Krishiseva</h1>
-          <p>Hello Admin, Welcome back!</p>
-        </div>
-
-        <div className="searchBar flex">
-          <input type="text" placeholder="Search Dashboard" />
-          <BiSearchAlt className="icon" />
-        </div>
-
-        <div className="adminDiv flex">
-          <TbMessageCircle className="icon" />
-          <MdOutlineNotificationsNone className="icon" />
-          <div className="adminImage">
-            <img src={img} alt="Admin Profile" />
-          </div>
-        </div>
-      </div>
+      <Header />
 
       <div className="content">
         <h2 className="page-title">Manage Insects</h2>
@@ -147,10 +130,16 @@ const Warm: React.FC = () => {
                   <td>{insect.name}</td>
                   <td>{insect.pesticide}</td>
                   <td className="action-buttons">
-                    <button className="edit-btn" onClick={() => handleEdit(insect)}>
+                    <button
+                      className="edit-btn"
+                      onClick={() => handleEdit(insect)}
+                    >
                       <FaEdit /> Edit
                     </button>
-                    <button className="delete-btn" onClick={() => handleDelete(insect._id)}>
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDelete(insect._id)}
+                    >
                       <FaTrash /> Delete
                     </button>
                   </td>

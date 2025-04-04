@@ -6,6 +6,7 @@ import { BiSearchAlt } from "react-icons/bi";
 import { TbMessageCircle } from "react-icons/tb";
 import { MdOutlineNotificationsNone } from "react-icons/md";
 import img from "../assets/user.png";
+import Header from "../components/Header";
 
 interface FaqItem {
   _id?: string;
@@ -88,25 +89,7 @@ const Faq: React.FC = () => {
 
   return (
     <div className="plant-page-wrapper">
-      <div className="headerSection flex">
-        <div className="title">
-          <h1>Welcome to Krishiseva</h1>
-          <p>Hello Admin, Welcome back!</p>
-        </div>
-
-        <div className="searchBar flex">
-          <input type="text" placeholder="Search Dashboard" />
-          <BiSearchAlt className="icon" />
-        </div>
-
-        <div className="adminDiv flex">
-          <TbMessageCircle className="icon" />
-          <MdOutlineNotificationsNone className="icon" />
-          <div className="adminImage">
-            <img src={img} alt="Admin Profile" />
-          </div>
-        </div>
-      </div>
+      <Header />
 
       <div className="content">
         <h2 className="page-title">Manage FAQs</h2>

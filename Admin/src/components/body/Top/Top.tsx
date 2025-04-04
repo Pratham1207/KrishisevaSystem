@@ -9,29 +9,12 @@ import { BsArrowRightShort, BsQuestionCircle } from "react-icons/bs";
 import userImage from "../../../assets/user.png";
 import plantImage from "../../../assets/plant.png";
 import videoBg from "../../../assets/video.mp4";
+import Header from "../../Header";
 
 const Top = ({ showCards = true }) => {
   return (
     <div className="topSection">
-      <div className="headerSection flex">
-        <div className="title">
-          <h1>Welcome to Krishiseva</h1>
-          <p>Hello Admin, Welcome back!</p>
-        </div>
-
-        <div className="searchBar flex">
-          <input type="text" placeholder="Search Dashboard" />
-          <BiSearchAlt className="icon" />
-        </div>
-
-        <div className="adminDiv flex">
-          <TbMessageCircle className="icon" />
-          <MdOutlineNotificationsNone className="icon" />
-          <div className="adminImage">
-            <img src={userImage} alt="Admin Profile" />
-          </div>
-        </div>
-      </div>
+      <Header />
 
       {/* Hide cardSection when showCards is false */}
       {showCards && (

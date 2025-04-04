@@ -13,7 +13,6 @@ import {
   MdQuestionAnswer,
   MdOutlineMessage,
 } from "react-icons/md";
-import { FcBusinessContact } from "react-icons/fc";
 import { SiSwarm } from "react-icons/si";
 import { TbBrandBooking } from "react-icons/tb";
 
@@ -22,7 +21,9 @@ const Sidebar: React.FC = () => {
     <div className="sideBar grid">
       <div className="logoDiv flex">
         <img src={logo} alt="Krishiseva logo" />
-        <h2>Krishiseva</h2>
+        <Link to="/" className="menuLink flex">
+          <h2>Krishiseva</h2>
+        </Link>
       </div>
 
       <div className="menuDiv">
