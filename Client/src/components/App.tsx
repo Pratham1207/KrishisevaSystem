@@ -16,6 +16,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/custom.css";
 import ProtectedRoute from "../services/ProtectedRoute";
+import FAQ from "./FAQ";
 
 const protectedPaths = ["/add-cold-storage", "/profile"];
 
@@ -31,8 +32,22 @@ const App: React.FC = () => {
           <Route path="/" element={<Dashboard />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<ContactUs />} />
-          <Route path="/plant-details" element={<PlantDetail />} />
-          <Route path="/cold-storage" element={<ColdStorage />} />
+          <Route
+            path="/plant-details"
+            element={
+              <ProtectedRoute>
+                <PlantDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cold-storage"
+            element={
+              <ProtectedRoute>
+                <ColdStorage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/add-cold-storage"
             element={
@@ -58,6 +73,7 @@ const App: React.FC = () => {
             }
           />
           <Route path="/soil-data-demo" element={<SoilDataDashboard />} />
+          <Route path="/faq" element={<FAQ />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
         <Footer />

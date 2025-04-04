@@ -32,18 +32,15 @@ const Navbar: React.FC = () => {
 
   const baseMenu: MenuItem[] = [
     { text: "Home", path: "/" },
-    { text: "Cold Storage", path: "/cold-storage" },
-    { text: "Plants", path: "/plant-details" },
+    ...(userObj ? [{ text: "Cold Storage", path: "/cold-storage" }] : []),
+    ...(userObj && userObj?.role === "csowner"
+      ? [{ text: "Add Cold Storage", path: "/add-cold-storage" }]
+      : []),
+    ...(userObj ? [{ text: "Plants", path: "/plant-details" }] : []),
     { text: "About Us", path: "/about-us" },
+    { text: "FAQs", path: "/faq" },
     { text: "Contact Us", path: "/contact-us" },
   ];
-
-  if (userObj?.role === "csowner") {
-    baseMenu.splice(2, 0, {
-      text: "Add Cold Storage",
-      path: "/add-cold-storage",
-    });
-  }
 
   const handleProfileMenuClick = (
     event: React.MouseEvent<HTMLButtonElement>

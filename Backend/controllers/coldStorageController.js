@@ -13,7 +13,7 @@ const addColdStorage = async (req, res) => {
       contact,
       address,
       size,
-      photo: `/uploads/${photo}`,
+      photo: `/uploads/coldstorages/${photo}`,
       createdBy: req.userId,
     });
 
@@ -43,7 +43,7 @@ const updateColdStorage = async (req, res) => {
     const updates = req.body;
 
     if (req.file) {
-      updates.photo = `/uploads/${req.file.filename}`;
+      updates.photo = `/uploads/coldstorages/${req.file.filename}`;
     }
 
     const updated = await ColdStorage.findByIdAndUpdate(id, updates, {

@@ -28,7 +28,7 @@ const PlantSchema = new mongoose.Schema(
 
     warm: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Warm",
+      ref: "Insect",
     },
 
     growthTime: { type: String },

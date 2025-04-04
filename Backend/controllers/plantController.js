@@ -49,7 +49,11 @@ const addPlant = async (req, res) => {
 
 const getPlants = async (req, res) => {
   try {
-    const plants = await Plant.find();
+    const plants = await Plant.find()
+      .populate("fertilizer", "name")
+      .populate("soil", "name")
+      .populate("pesticide", "name")
+      .populate("warm", "name");
     res.status(200).json(plants);
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });

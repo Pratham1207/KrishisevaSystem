@@ -1,0 +1,36 @@
+.faq-container {
+  padding: 2rem 1rem;
+}
+
+.faq-container .MuiAccordion-root {
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.faq-container .MuiAccordion-root:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.faq-container .MuiAccordionSummary-root {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.faq-container .MuiAccordionDetails-root {
+  background-color: #fff;
+  padding: 1rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .faq-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .faq-container .MuiAccordionDetails-root {
+    font-size: 0.95rem;
+  }
+}
