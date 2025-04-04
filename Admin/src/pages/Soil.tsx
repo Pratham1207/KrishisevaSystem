@@ -1,4 +1,3 @@
-// src/pages/Soil.tsx
 import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { BiSearchAlt } from "react-icons/bi";
@@ -80,6 +79,13 @@ const Soil: React.FC = () => {
     }
   };
 
+  const resetForm = () => {
+    setFormData({ name: "", ph: "", description: "" });
+    setIsEditing(false);
+    setEditingId(null);
+    setShowForm(false);
+  };
+
   return (
     <div className="plant-page-wrapper">
       <Header />
@@ -87,7 +93,13 @@ const Soil: React.FC = () => {
       <div className="content">
         <h2 className="page-title">Manage Soils</h2>
 
-        <button className="add-btn" onClick={() => setShowForm(true)}>
+        <button
+          className="add-btn"
+          onClick={() => {
+            resetForm();
+            setShowForm(true);
+          }}
+        >
           <FaPlus /> Add Soil
         </button>
 
@@ -120,7 +132,7 @@ const Soil: React.FC = () => {
                 required
               />
               <button type="submit">{isEditing ? "Update" : "Add"}</button>
-              <button type="button" onClick={() => setShowForm(false)}>
+              <button type="button" onClick={resetForm}>
                 Cancel
               </button>
             </form>

@@ -61,6 +61,7 @@ const Faq: React.FC = () => {
       }
 
       setShowForm(false);
+      resetForm();
       setIsEditing(false);
       setFormData({ question: "", answer: "" });
       fetchFaqs();
@@ -85,6 +86,12 @@ const Faq: React.FC = () => {
     } catch (error) {
       console.error("Error deleting FAQ:", error);
     }
+  };
+
+  const resetForm = () => {
+    setFormData({ question: "", answer: "" });
+    setIsEditing(false);
+    setShowForm(false);
   };
 
   return (
@@ -118,7 +125,7 @@ const Faq: React.FC = () => {
                 required
               />
               <button type="submit">{isEditing ? "Update" : "Add"}</button>
-              <button type="button" onClick={() => setShowForm(false)}>
+              <button type="button" onClick={resetForm}>
                 Cancel
               </button>
             </form>

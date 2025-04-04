@@ -261,6 +261,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
   background: white;
   padding: 20px;
   border-radius: 10px;
@@ -365,6 +367,14 @@
   margin-bottom: 10px;
 }
 
+.form-container::-webkit-scrollbar {
+  width: 6px;
+}
+.form-container::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 5px;
+}
+
 .overlay {
   position: fixed;
   top: 0;
@@ -404,6 +414,10 @@
 
   .plant-card {
     width: 100%;
+  }
+  .form-container {
+    width: 95%;
+    max-height: 85vh;
   }
 }
 

@@ -19,7 +19,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({
   title = "Welcome to Krishiseva",
-  subtitle = "Hello Admin, Welcome back!",
+  subtitle = "Hello, Welcome back!",
   searchPlaceholder = "Search Dashboard",
 }) => {
   const navigate = useNavigate();

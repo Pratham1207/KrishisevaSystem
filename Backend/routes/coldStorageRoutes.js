@@ -9,12 +9,17 @@ const {
   deleteColdStorage,
 } = require("../controllers/coldStorageController");
 
-router.post("/add", verifyToken, upload.single("photo"), addColdStorage);
+router.post(
+  "/add",
+  verifyToken,
+  upload("coldstorages").single("photo"),
+  addColdStorage
+);
 router.get("/", getColdStorages);
 router.put(
   "/update/:id",
   verifyToken,
-  upload.single("photo"),
+  upload("coldstorages").single("photo"),
   updateColdStorage
 );
 router.delete("/delete/:id", verifyToken, deleteColdStorage);
