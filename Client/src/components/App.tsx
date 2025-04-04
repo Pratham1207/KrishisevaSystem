@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginRegister from "./LoginRegister";
 import Dashboard from "./Dashboard";
 import Navbar from "./Navbar";
@@ -8,16 +8,15 @@ import AboutUs from "./AboutUs";
 import ContactUs from "./ContactUs";
 import PlantDetail from "./PlantDetail";
 import ColdStorage from "./ColdStorage";
+import AddColdStorage from "./AddColdStorage"; 
 import SoilDataDashboard from "./SoilDataDemo";
 import UserProfile from "./UserProfile";
+import PageNotFound from "./PageNotFound";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/custom.css";
-import PageNotFound from "./PageNotFound";
 
 const App: React.FC = () => {
-  const isAuthenticated = localStorage.getItem("token");
-
   return (
     <BrowserRouter>
       <div className="App">
@@ -30,9 +29,9 @@ const App: React.FC = () => {
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/plant-details" element={<PlantDetail />} />
           <Route path="/cold-storage" element={<ColdStorage />} />
+          <Route path="/add-cold-storage" element={<AddColdStorage />} />
           <Route path="/soil-data-demo" element={<SoilDataDashboard />} />
           <Route path="/profile" element={<UserProfile />} />
-
           <Route path="*" element={<PageNotFound />} />
         </Routes>
         <Footer />
