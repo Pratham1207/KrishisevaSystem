@@ -11,6 +11,7 @@ import {
   updateSoil,
   deleteSoil,
 } from "../api/soilAPI";
+import Header from "../components/Header";
 
 interface Soil {
   _id?: string;
@@ -62,7 +63,11 @@ const Soil: React.FC = () => {
   };
 
   const handleEdit = (soil: Soil) => {
-    setFormData({ name: soil.name, ph: soil.ph, description: soil.description });
+    setFormData({
+      name: soil.name,
+      ph: soil.ph,
+      description: soil.description,
+    });
     setEditingId(soil._id || null);
     setIsEditing(true);
     setShowForm(true);
@@ -77,25 +82,7 @@ const Soil: React.FC = () => {
 
   return (
     <div className="plant-page-wrapper">
-      <div className="headerSection flex">
-        <div className="title">
-          <h1>Welcome to Krishiseva</h1>
-          <p>Hello Admin, Welcome back!</p>
-        </div>
-
-        <div className="searchBar flex">
-          <input type="text" placeholder="Search Dashboard" />
-          <BiSearchAlt className="icon" />
-        </div>
-
-        <div className="adminDiv flex">
-          <TbMessageCircle className="icon" />
-          <MdOutlineNotificationsNone className="icon" />
-          <div className="adminImage">
-            <img src={img} alt="Admin Profile" />
-          </div>
-        </div>
-      </div>
+      <Header />
 
       <div className="content">
         <h2 className="page-title">Manage Soils</h2>
@@ -159,10 +146,16 @@ const Soil: React.FC = () => {
                   <td>{soil.ph}</td>
                   <td>{soil.description}</td>
                   <td className="action-buttons">
-                    <button className="edit-btn" onClick={() => handleEdit(soil)}>
+                    <button
+                      className="edit-btn"
+                      onClick={() => handleEdit(soil)}
+                    >
                       <FaEdit /> Edit
                     </button>
-                    <button className="delete-btn" onClick={() => handleDelete(soil._id)}>
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDelete(soil._id)}
+                    >
                       <FaTrash /> Delete
                     </button>
                   </td>

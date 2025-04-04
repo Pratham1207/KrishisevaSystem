@@ -9,6 +9,7 @@ import "./App.css";
 
 import Sidebar from "./components/sidebar/Sidebar";
 import Body from "./components/body/Body";
+
 import Plant from "./pages/Plant";
 import Fertilizer from "./pages/Fertilizer";
 import Pesticides from "./pages/Pesticides";
@@ -18,6 +19,8 @@ import ColdStoragePage from "./pages/ColdStorage";
 import Faq from "./pages/Faq";
 import User from "./pages/User";
 import ContactUs from "./pages/ContactUs";
+import Login from "./pages/Login";
+
 const MainLayout: React.FC = () => {
   const location = useLocation();
 
@@ -45,7 +48,11 @@ const MainLayout: React.FC = () => {
 const App: React.FC = () => {
   return (
     <Router>
-      <MainLayout />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+
+        <Route path="*" element={<MainLayout />} />
+      </Routes>
     </Router>
   );
 };
