@@ -1,84 +1,76 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/Warm.css";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { BiSearchAlt } from "react-icons/bi";
 import { TbMessageCircle } from "react-icons/tb";
 import { MdOutlineNotificationsNone } from "react-icons/md";
 import img from "../assets/user.png";
+import {
+  getAllInsects,
+  createInsect,
+  updateInsect,
+  deleteInsect,
+} from "../api/insectAPI";
 
-interface Warm {
-  id: number;
+interface Insect {
+  _id?: string;
   name: string;
-  temperature: string;
-  description: string;
+  pesticide: string;
 }
 
 const Warm: React.FC = () => {
-  const [warmData, setWarmData] = useState<Warm[]>([
-    {
-      id: 1,
-      name: "Tropical Climate",
-      temperature: "25-35°C",
-      description: "Hot and humid climate, ideal for tropical crops.",
-    },
-    {
-      id: 2,
-      name: "Temperate Climate",
-      temperature: "10-25°C",
-      description: "Moderate temperature, suitable for a variety of crops.",
-    },
-    {
-      id: 3,
-      name: "Arid Climate",
-      temperature: "30-45°C",
-      description: "Very dry and hot, requiring drought-resistant plants.",
-    },
-  ]);
-
-  const [formData, setFormData] = useState<
-    Omit<Warm, "id"> & { id: number | null }
-  >({
-    id: null,
+  const [insects, setInsects] = useState<Insect[]>([]);
+  const [formData, setFormData] = useState<Insect>({
     name: "",
-    temperature: "",
-    description: "",
+    pesticide: "",
   });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
 
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [showForm, setShowForm] = useState<boolean>(false);
+  const fetchInsects = async () => {
+    const data = await getAllInsects();
+    setInsects(data);
+  };
+
+  useEffect(() => {
+    fetchInsects();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isEditing) {
-      setWarmData((prev) =>
-        prev.map((item) =>
-          item.id === formData.id ? (formData as Warm) : item
-        )
-      );
+    try {
+      if (isEditing && editingId) {
+        await updateInsect(editingId, formData);
+      } else {
+        await createInsect(formData);
+      }
+      await fetchInsects();
+      setFormData({ name: "", pesticide: "" });
       setIsEditing(false);
-    } else {
-      const newEntry: Warm = {
-        ...(formData as Warm),
-        id: warmData.length + 1,
-      };
-      setWarmData([...warmData, newEntry]);
+      setEditingId(null);
+      setShowForm(false);
+    } catch (error) {
+      console.error("Error submitting form:", error);
     }
-    setShowForm(false);
-    setFormData({ id: null, name: "", temperature: "", description: "" });
   };
 
-  const handleEdit = (climate: Warm) => {
-    setFormData(climate);
+  const handleEdit = (insect: Insect) => {
+    setFormData({ name: insect.name, pesticide: insect.pesticide });
+    setEditingId(insect._id || null);
     setIsEditing(true);
     setShowForm(true);
   };
 
-  const handleDelete = (id: number) => {
-    setWarmData(warmData.filter((c) => c.id !== id));
+  const handleDelete = async (id: string | undefined) => {
+    if (id) {
+      await deleteInsect(id);
+      fetchInsects();
+    }
   };
 
   return (
@@ -104,37 +96,29 @@ const Warm: React.FC = () => {
       </div>
 
       <div className="content">
-        <h2 className="page-title">Manage Warm Details</h2>
+        <h2 className="page-title">Manage Insects</h2>
 
         <button className="add-btn" onClick={() => setShowForm(true)}>
-          <FaPlus /> Add Climate
+          <FaPlus /> Add Insect
         </button>
 
         {showForm && (
           <div className="form-container">
-            <h3>{isEditing ? "Edit Climate" : "Add Climate"}</h3>
+            <h3>{isEditing ? "Edit Insect" : "Add Insect"}</h3>
             <form onSubmit={handleSubmit}>
               <input
                 type="text"
                 name="name"
-                placeholder="Climate Name"
+                placeholder="Insect Name"
                 value={formData.name}
                 onChange={handleChange}
                 required
               />
               <input
                 type="text"
-                name="temperature"
-                placeholder="Temperature Range"
-                value={formData.temperature}
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="text"
-                name="description"
-                placeholder="Description"
-                value={formData.description}
+                name="pesticide"
+                placeholder="Pesticide Used"
+                value={formData.pesticide}
                 onChange={handleChange}
                 required
               />
@@ -151,30 +135,22 @@ const Warm: React.FC = () => {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Warm Name</th>
-                <th>Temperature</th>
-                <th>Description</th>
+                <th>Insect Name</th>
+                <th>Pesticide</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {warmData.map((climate) => (
-                <tr key={climate.id}>
-                  <td>{climate.id}</td>
-                  <td>{climate.name}</td>
-                  <td>{climate.temperature}</td>
-                  <td>{climate.description}</td>
+              {insects.map((insect, index) => (
+                <tr key={insect._id}>
+                  <td>{index + 1}</td>
+                  <td>{insect.name}</td>
+                  <td>{insect.pesticide}</td>
                   <td className="action-buttons">
-                    <button
-                      className="edit-btn"
-                      onClick={() => handleEdit(climate)}
-                    >
+                    <button className="edit-btn" onClick={() => handleEdit(insect)}>
                       <FaEdit /> Edit
                     </button>
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDelete(climate.id)}
-                    >
+                    <button className="delete-btn" onClick={() => handleDelete(insect._id)}>
                       <FaTrash /> Delete
                     </button>
                   </td>

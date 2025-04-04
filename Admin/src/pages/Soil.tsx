@@ -1,78 +1,78 @@
-import React, { useState } from "react";
+// src/pages/Soil.tsx
+import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { BiSearchAlt } from "react-icons/bi";
 import { TbMessageCircle } from "react-icons/tb";
 import { MdOutlineNotificationsNone } from "react-icons/md";
 import img from "../assets/user.png";
+import {
+  getAllSoils,
+  createSoil,
+  updateSoil,
+  deleteSoil,
+} from "../api/soilAPI";
 
 interface Soil {
-  id: number;
+  _id?: string;
   name: string;
   ph: string;
   description: string;
 }
 
 const Soil: React.FC = () => {
-  const [soils, setSoils] = useState<Soil[]>([
-    {
-      id: 1,
-      name: "Clay Soil",
-      ph: "5.5 - 7.0",
-      description: "Heavy soil that retains moisture well.",
-    },
-    {
-      id: 2,
-      name: "Sandy Soil",
-      ph: "5.5 - 6.5",
-      description: "Light soil with fast drainage.",
-    },
-    {
-      id: 3,
-      name: "Loamy Soil",
-      ph: "6.0 - 7.5",
-      description: "Ideal soil for most plants with good fertility.",
-    },
-  ]);
-
-  const [formData, setFormData] = useState<
-    Omit<Soil, "id"> & { id: number | null }
-  >({
-    id: null,
+  const [soils, setSoils] = useState<Soil[]>([]);
+  const [formData, setFormData] = useState<Soil>({
     name: "",
     ph: "",
     description: "",
   });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
 
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [showForm, setShowForm] = useState<boolean>(false);
+  const fetchSoils = async () => {
+    const data = await getAllSoils();
+    setSoils(data);
+  };
+
+  useEffect(() => {
+    fetchSoils();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isEditing) {
-      setSoils(
-        soils.map((s) => (s.id === formData.id ? (formData as Soil) : s))
-      );
+    try {
+      if (isEditing && editingId) {
+        await updateSoil(editingId, formData);
+      } else {
+        await createSoil(formData);
+      }
+      await fetchSoils();
+      setFormData({ name: "", ph: "", description: "" });
       setIsEditing(false);
-    } else {
-      setSoils([...soils, { ...(formData as Soil), id: soils.length + 1 }]);
+      setEditingId(null);
+      setShowForm(false);
+    } catch (error) {
+      console.error("Error submitting form:", error);
     }
-
-    setShowForm(false);
-    setFormData({ id: null, name: "", ph: "", description: "" });
   };
 
   const handleEdit = (soil: Soil) => {
-    setFormData(soil);
+    setFormData({ name: soil.name, ph: soil.ph, description: soil.description });
+    setEditingId(soil._id || null);
     setIsEditing(true);
     setShowForm(true);
   };
 
-  const handleDelete = (id: number) => {
-    setSoils(soils.filter((s) => s.id !== id));
+  const handleDelete = async (id: string | undefined) => {
+    if (id) {
+      await deleteSoil(id);
+      fetchSoils();
+    }
   };
 
   return (
@@ -152,23 +152,17 @@ const Soil: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {soils.map((soil) => (
-                <tr key={soil.id}>
-                  <td>{soil.id}</td>
+              {soils.map((soil, index) => (
+                <tr key={soil._id}>
+                  <td>{index + 1}</td>
                   <td>{soil.name}</td>
                   <td>{soil.ph}</td>
                   <td>{soil.description}</td>
                   <td className="action-buttons">
-                    <button
-                      className="edit-btn"
-                      onClick={() => handleEdit(soil)}
-                    >
+                    <button className="edit-btn" onClick={() => handleEdit(soil)}>
                       <FaEdit /> Edit
                     </button>
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDelete(soil.id)}
-                    >
+                    <button className="delete-btn" onClick={() => handleDelete(soil._id)}>
                       <FaTrash /> Delete
                     </button>
                   </td>
