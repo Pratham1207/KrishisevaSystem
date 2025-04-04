@@ -1,32 +1,29 @@
 import React, { useState } from "react";
 import "../styles/AddColdStorage.css";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 interface FormData {
   image: File | null;
-  storageName: string;
+  name: string;
   description: string;
-  contactNo: string;
-  storageSize: string;
+  contact: string;
+  address: string;
+  size: string;
 }
 
 const AddColdStorage: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     image: null,
-    storageName: "",
+    name: "",
     description: "",
-    contactNo: "",
-    storageSize: "",
+    contact: "",
+    address: "",
+    size: "",
   });
 
-  const [errors, setErrors] = useState<{ [key: string]: string }>({
-    image: "",
-    storageName: "",
-    description: "",
-    contactNo: "",
-    storageSize: "",
-  });
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  // Handle image file input change
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -41,67 +38,135 @@ const AddColdStorage: React.FC = () => {
     }
   };
 
-  // Handle other input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.storageName || !formData.description || !formData.contactNo || !formData.storageSize) {
-      setErrors({ ...errors, general: "All fields are required." });
+
+    const newErrors: { [key: string]: string } = {};
+    for (const field of ["name", "description", "contact", "address", "size"]) {
+      if (!formData[field as keyof FormData]) {
+        newErrors[field] = "This field is required.";
+      }
+    }
+    if (!formData.image) newErrors.image = "Image is required.";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
-    console.log("Form data submitted:", formData);
+
+    try {
+      const token = localStorage.getItem("token");
+      const data = new FormData();
+      data.append("name", formData.name);
+      data.append("description", formData.description);
+      data.append("contact", formData.contact);
+      data.append("address", formData.address);
+      data.append("size", formData.size);
+      if (formData.image) {
+        data.append("photo", formData.image);
+      }
+
+      await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/cold-storages/add`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      toast.success("Cold storage added successfully!");
+      setFormData({
+        image: null,
+        name: "",
+        description: "",
+        contact: "",
+        address: "",
+        size: "",
+      });
+      setErrors({});
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Submission failed.");
+    }
   };
 
   return (
     <div className="add-cold-storage-container">
       <h2>Add Cold Storage</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="storageName">Storage Name</label>
-          <input type="text" id="storageName" name="storageName" value={formData.storageName} onChange={handleInputChange} />
-          {errors.storageName && <p className="error-message">{errors.storageName}</p>}
-        </div>
-        
-        <div>
-          <label htmlFor="description">Description</label>
-          <input type="text" id="description" name="description" value={formData.description} onChange={handleInputChange} />
-          {errors.description && <p className="error-message">{errors.description}</p>}
-        </div>
+        <input
+          type="text"
+          name="name"
+          placeholder="Storage Name"
+          value={formData.name}
+          onChange={handleInputChange}
+        />
+        {errors.name && <p className="error-message">{errors.name}</p>}
 
-        <div>
-          <label htmlFor="contactNo">Contact Number</label>
-          <input type="text" id="contactNo" name="contactNo" value={formData.contactNo} onChange={handleInputChange} />
-          {errors.contactNo && <p className="error-message">{errors.contactNo}</p>}
-        </div>
+        <input
+          type="text"
+          name="description"
+          placeholder="Description"
+          value={formData.description}
+          onChange={handleInputChange}
+        />
+        {errors.description && (
+          <p className="error-message">{errors.description}</p>
+        )}
 
-        <div>
-          <label htmlFor="storageSize">Storage Size</label>
-          <input type="text" id="storageSize" name="storageSize" value={formData.storageSize} onChange={handleInputChange} />
-          {errors.storageSize && <p className="error-message">{errors.storageSize}</p>}
-        </div>
+        <input
+          type="text"
+          name="contact"
+          placeholder="Contact Number"
+          value={formData.contact}
+          onChange={handleInputChange}
+        />
+        {errors.contact && <p className="error-message">{errors.contact}</p>}
 
-        <div>
-          <label htmlFor="image">Upload Image</label>
-          <input type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
-          {errors.image && <p className="error-message">{errors.image}</p>}
-          {formData.image && (
-            <div>
-              <p>Selected file: {formData.image.name}</p>
-              <img src={URL.createObjectURL(formData.image)} alt="Preview" width={100} />
-            </div>
-          )}
-        </div>
+        <input
+          type="text"
+          name="address"
+          placeholder="Address"
+          value={formData.address}
+          onChange={handleInputChange}
+        />
+        {errors.address && <p className="error-message">{errors.address}</p>}
 
-        <button type="submit" className="add-cold-storage-button">Submit</button>
+        <input
+          type="text"
+          name="size"
+          placeholder="Storage Size"
+          value={formData.size}
+          onChange={handleInputChange}
+        />
+        {errors.size && <p className="error-message">{errors.size}</p>}
+
+        <input type="file" accept="image/*" onChange={handleImageChange} />
+        {errors.image && <p className="error-message">{errors.image}</p>}
+        {formData.image && (
+          <div>
+            <p>Selected file: {formData.image.name}</p>
+            <img
+              src={URL.createObjectURL(formData.image)}
+              alt="Preview"
+              width={100}
+            />
+          </div>
+        )}
+
+        <button type="submit" className="add-cold-storage-button">
+          Submit
+        </button>
       </form>
-      {errors.general && <p className="error-message">{errors.general}</p>}
     </div>
   );
 };
 
 export default AddColdStorage;
-

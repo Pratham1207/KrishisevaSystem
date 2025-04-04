@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const path = require("path");
 
 const authRoutes = require("./routes/authRoutes");
 const fertilizerRoutes = require("./routes/fertilizerRoutes");
@@ -11,6 +12,7 @@ const soilDataRoutes = require("./routes/soilDataRoutes");
 const soilRoutes = require("./routes/soilRoutes");
 const insectRoutes = require("./routes/insectRoutes");
 const faqRoutes = require("./routes/faqRoutes");
+const coldStorageRoutes = require("./routes/coldStorageRoutes");
 
 require("dotenv").config();
 
@@ -19,6 +21,7 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Database Connection
 mongoose
@@ -35,6 +38,7 @@ app.use("/soildata", soilDataRoutes);
 app.use("/soil", soilRoutes);
 app.use("/insects", insectRoutes);
 app.use("/faqs", faqRoutes);
+app.use("/cold-storages", coldStorageRoutes);
 
 // Listening Server
 const PORT = process.env.PORT || 5000;

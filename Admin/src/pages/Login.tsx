@@ -1,27 +1,42 @@
 import React, { useState } from "react";
 import "../styles/Login.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Dummy logic for now – replace with real API call
-    if (email === "admin@krishiseva.com" && password === "admin123") {
-      setError("");
-      navigate("/"); // redirect to dashboard
-    } else {
-      setError("Invalid email or password");
+    try {
+      const res = await axios.post("http://localhost:5000/auth/admin-login", {
+        email,
+        password,
+      });
+
+      const { token, user } = res.data;
+
+      localStorage.setItem("adminToken", token);
+      localStorage.setItem("adminUser", JSON.stringify(user));
+
+      toast.success("Login successful!", { autoClose: 1500 });
+
+      setTimeout(() => {
+        navigate("/"); // redirect to dashboard
+      }, 1500);
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Login failed");
     }
   };
 
   return (
     <div className="login-wrapper">
+      <ToastContainer />
       <div className="login-card">
         <h2>Admin Login</h2>
         <p className="login-subtext">Welcome back to Krishiseva Admin Panel</p>
@@ -42,8 +57,6 @@ const Login: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-
-          {error && <p className="login-error">{error}</p>}
 
           <button type="submit" className="btn login-btn">
             Login

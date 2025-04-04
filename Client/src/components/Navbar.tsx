@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Logo from "../Assets/Logo.png";
 import { HiOutlineBars3 } from "react-icons/hi2";
@@ -28,17 +27,23 @@ const Navbar: React.FC = () => {
   const [toggleMenu, setToggleMenu] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
 
-  const menuOptions: MenuItem[] = [
+  const user = localStorage.getItem("user");
+  const userObj = user ? JSON.parse(user) : null;
+
+  const baseMenu: MenuItem[] = [
     { text: "Home", path: "/" },
     { text: "Cold Storage", path: "/cold-storage" },
     { text: "Plants", path: "/plant-details" },
-    { text: "Add Cold Storage", path: "/add-cold-storage" },
     { text: "About Us", path: "/about-us" },
     { text: "Contact Us", path: "/contact-us" },
   ];
 
-  const user = localStorage.getItem("user");
-  const userObj = user ? JSON.parse(user) : null;
+  if (userObj?.role === "csowner") {
+    baseMenu.splice(2, 0, {
+      text: "Add Cold Storage",
+      path: "/add-cold-storage",
+    });
+  }
 
   const handleProfileMenuClick = (
     event: React.MouseEvent<HTMLButtonElement>
@@ -68,11 +73,12 @@ const Navbar: React.FC = () => {
       </Link>
 
       <div className="navbar-links-container desktop-only">
-        {menuOptions.map((item) => (
+        {baseMenu.map((item) => (
           <Link key={item.text} to={item.path}>
             {item.text}
           </Link>
         ))}
+
         {!userObj ? (
           <button className="primary-button" onClick={handleSignIn}>
             Sign In
@@ -114,7 +120,7 @@ const Navbar: React.FC = () => {
           onKeyDown={() => setOpenMenu(false)}
         >
           <List>
-            {menuOptions.map((item) => (
+            {baseMenu.map((item) => (
               <ListItem key={item.text} disablePadding>
                 <ListItemButton component={Link} to={item.path}>
                   <ListItemText primary={item.text} />
@@ -135,9 +141,7 @@ const Navbar: React.FC = () => {
                 </p>
                 <button
                   className="drawer-link"
-                  onClick={() => {
-                    navigate("/profile");
-                  }}
+                  onClick={() => navigate("/profile")}
                 >
                   My Profile
                 </button>
@@ -154,6 +158,3 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
-
-
-
