@@ -61,9 +61,7 @@ const Fertilizer: React.FC = () => {
         await axios.post("http://localhost:5000/fertilizers/add", formData);
       }
 
-      setIsEditing(false);
-      setShowForm(false);
-      setFormData({ name: "", type: "", quantity: "", unit: "", price: "" });
+      resetForm();
       fetchFertilizers();
     } catch (error) {
       console.error("Error saving fertilizer:", error);
@@ -89,6 +87,18 @@ const Fertilizer: React.FC = () => {
     } catch (error) {
       console.error("Error deleting fertilizer:", error);
     }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      type: "",
+      quantity: "",
+      unit: "",
+      price: "",
+    });
+    setIsEditing(false);
+    setShowForm(false);
   };
 
   return (
@@ -148,7 +158,7 @@ const Fertilizer: React.FC = () => {
                 required
               />
               <button type="submit">{isEditing ? "Update" : "Add"}</button>
-              <button type="button" onClick={() => setShowForm(false)}>
+              <button type="button" onClick={resetForm}>
                 Cancel
               </button>
             </form>

@@ -58,9 +58,7 @@ const Pesticides: React.FC = () => {
       }
 
       fetchPesticides();
-      setFormData({ name: "", dose: "", description: "" });
-      setShowForm(false);
-      setIsEditing(false);
+      resetForm();
     } catch (error) {
       console.error("Error saving pesticide:", error);
     }
@@ -85,6 +83,12 @@ const Pesticides: React.FC = () => {
     } catch (error) {
       console.error("Error deleting pesticide:", error);
     }
+  };
+
+  const resetForm = () => {
+    setFormData({ name: "", dose: "", description: "" });
+    setIsEditing(false);
+    setShowForm(false);
   };
 
   return (
@@ -128,7 +132,7 @@ const Pesticides: React.FC = () => {
                 required
               />
               <button type="submit">{isEditing ? "Update" : "Add"}</button>
-              <button type="button" onClick={() => setShowForm(false)}>
+              <button type="button" onClick={resetForm}>
                 Cancel
               </button>
             </form>

@@ -74,6 +74,13 @@ const Warm: React.FC = () => {
     }
   };
 
+  const resetForm = () => {
+    setFormData({ name: "", pesticide: "" });
+    setIsEditing(false);
+    setEditingId(null);
+    setShowForm(false);
+  };
+
   return (
     <div className="plant-page-wrapper">
       <Header />
@@ -81,7 +88,13 @@ const Warm: React.FC = () => {
       <div className="content">
         <h2 className="page-title">Manage Insects</h2>
 
-        <button className="add-btn" onClick={() => setShowForm(true)}>
+        <button
+          className="add-btn"
+          onClick={() => {
+            resetForm();
+            setShowForm(true);
+          }}
+        >
           <FaPlus /> Add Insect
         </button>
 
@@ -106,7 +119,7 @@ const Warm: React.FC = () => {
                 required
               />
               <button type="submit">{isEditing ? "Update" : "Add"}</button>
-              <button type="button" onClick={() => setShowForm(false)}>
+              <button type="button" onClick={resetForm}>
                 Cancel
               </button>
             </form>

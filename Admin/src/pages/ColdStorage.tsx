@@ -110,6 +110,7 @@ const ColdStorage: React.FC = () => {
       setEditingId(null);
       setShowForm(false);
       fetchStorages();
+      handleCloseForm();
     } catch (err) {
       console.error("Submission error:", err);
     }
@@ -135,6 +136,24 @@ const ColdStorage: React.FC = () => {
     } catch (err) {
       console.error("Delete error:", err);
     }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      description: "",
+      contact: "",
+      address: "",
+      size: "",
+    });
+    setPhoto(null);
+    setEditingId(null);
+    setIsEditing(false);
+  };
+
+  const handleCloseForm = () => {
+    resetForm();
+    setShowForm(false);
   };
 
   return (
@@ -188,7 +207,7 @@ const ColdStorage: React.FC = () => {
               />
               <input type="file" accept="image/*" onChange={handleFileChange} />
               <button type="submit">{isEditing ? "Update" : "Add"}</button>
-              <button type="button" onClick={() => setShowForm(false)}>
+              <button type="button" onClick={handleCloseForm}>
                 Cancel
               </button>
             </form>
