@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import Logo from "../Assets/Logo.png";
 import { HiOutlineBars3 } from "react-icons/hi2";
@@ -31,6 +32,7 @@ const Navbar: React.FC = () => {
     { text: "Home", path: "/" },
     { text: "Cold Storage", path: "/cold-storage" },
     { text: "Plants", path: "/plant-details" },
+    { text: "Add Cold Storage", path: "/add-cold-storage" },
     { text: "About Us", path: "/about-us" },
     { text: "Contact Us", path: "/contact-us" },
   ];
@@ -152,3 +154,6 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
+
+
+
