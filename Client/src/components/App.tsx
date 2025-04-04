@@ -8,15 +8,19 @@ import AboutUs from "./AboutUs";
 import ContactUs from "./ContactUs";
 import PlantDetail from "./PlantDetail";
 import ColdStorage from "./ColdStorage";
-import AddColdStorage from "./AddColdStorage"; 
+import AddColdStorage from "./AddColdStorage";
 import SoilDataDashboard from "./SoilDataDemo";
 import UserProfile from "./UserProfile";
 import PageNotFound from "./PageNotFound";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/custom.css";
+import ProtectedRoute from "../services/ProtectedRoute";
+
+const protectedPaths = ["/add-cold-storage", "/profile"];
 
 const App: React.FC = () => {
+  const isProtected = (path: string) => protectedPaths.includes(path);
   return (
     <BrowserRouter>
       <div className="App">
@@ -29,9 +33,31 @@ const App: React.FC = () => {
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/plant-details" element={<PlantDetail />} />
           <Route path="/cold-storage" element={<ColdStorage />} />
-          <Route path="/add-cold-storage" element={<AddColdStorage />} />
+          <Route
+            path="/add-cold-storage"
+            element={
+              isProtected("/add-cold-storage") ? (
+                <ProtectedRoute>
+                  <AddColdStorage />
+                </ProtectedRoute>
+              ) : (
+                <AddColdStorage />
+              )
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              isProtected("/profile") ? (
+                <ProtectedRoute>
+                  <UserProfile />
+                </ProtectedRoute>
+              ) : (
+                <UserProfile />
+              )
+            }
+          />
           <Route path="/soil-data-demo" element={<SoilDataDashboard />} />
-          <Route path="/profile" element={<UserProfile />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
         <Footer />
@@ -39,5 +65,4 @@ const App: React.FC = () => {
     </BrowserRouter>
   );
 };
-
 export default App;

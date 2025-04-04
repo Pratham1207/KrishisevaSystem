@@ -20,6 +20,7 @@ import Faq from "./pages/Faq";
 import User from "./pages/User";
 import ContactUs from "./pages/ContactUs";
 import Login from "./pages/Login";
+import PrivateRoute from "./services/PrivateRoute";
 
 const MainLayout: React.FC = () => {
   const location = useLocation();
@@ -28,18 +29,87 @@ const MainLayout: React.FC = () => {
     <div className="container">
       <Sidebar />
 
-      {location.pathname === "/" && <Body />}
-
       <Routes>
-        <Route path="/plant" element={<Plant />} />
-        <Route path="/fertilizer" element={<Fertilizer />} />
-        <Route path="/pesticides" element={<Pesticides />} />
-        <Route path="/soil" element={<Soil />} />
-        <Route path="/warm" element={<Warm />} />
-        <Route path="/coldStorage" element={<ColdStoragePage />} />
-        <Route path="/faqs" element={<Faq />} />
-        <Route path="/user" element={<User />} />
-        <Route path="/contact-messages" element={<ContactUs />} />
+        <Route
+          path="/plant"
+          element={
+            <PrivateRoute>
+              <Plant />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/fertilizer"
+          element={
+            <PrivateRoute>
+              <Fertilizer />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/pesticides"
+          element={
+            <PrivateRoute>
+              <Pesticides />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/soil"
+          element={
+            <PrivateRoute>
+              <Soil />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/warm"
+          element={
+            <PrivateRoute>
+              <Warm />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/coldStorage"
+          element={
+            <PrivateRoute>
+              <ColdStoragePage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/faqs"
+          element={
+            <PrivateRoute>
+              <Faq />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/user"
+          element={
+            <PrivateRoute>
+              <User />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/contact-messages"
+          element={
+            <PrivateRoute>
+              <ContactUs />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Body />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </div>
   );
@@ -50,7 +120,6 @@ const App: React.FC = () => {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-
         <Route path="*" element={<MainLayout />} />
       </Routes>
     </Router>

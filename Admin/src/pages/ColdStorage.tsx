@@ -1,163 +1,192 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import axios from "axios";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
-import { BiSearchAlt } from "react-icons/bi";
-import { TbMessageCircle } from "react-icons/tb";
-import { MdOutlineNotificationsNone } from "react-icons/md";
-import img from "../assets/user.png";
 import Header from "../components/Header";
 
 interface ColdStorageItem {
-  id: number;
+  _id?: string;
   name: string;
+  description: string;
   contact: string;
-  email: string;
   address: string;
-  status: "Active" | "Not Active";
+  size: string;
+  photo?: string;
 }
 
 const ColdStorage: React.FC = () => {
-  const [coldStorages, setColdStorages] = useState<ColdStorageItem[]>([
-    {
-      id: 1,
-      name: "Arctic Fresh Storage",
-      contact: "+1234567890",
-      email: "arctic@example.com",
-      address: "123 Frost Lane, Toronto",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Polar Cold Hub",
-      contact: "+0987654321",
-      email: "polar@example.com",
-      address: "456 Iceberg St, Ottawa",
-      status: "Not Active",
-    },
-    {
-      id: 3,
-      name: "Chill Zone Storage",
-      contact: "+1122334455",
-      email: "chillzone@example.com",
-      address: "789 Glacier Ave, Vancouver",
-      status: "Active",
-    },
-  ]);
-
+  const [storages, setStorages] = useState<ColdStorageItem[]>([]);
   const [formData, setFormData] = useState<ColdStorageItem>({
-    id: 0,
     name: "",
+    description: "",
     contact: "",
-    email: "",
     address: "",
-    status: "Active",
+    size: "",
   });
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
 
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [showForm, setShowForm] = useState<boolean>(false);
+  const token = localStorage.getItem("adminToken");
+
+  const fetchStorages = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/cold-storages/`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setStorages(res.data);
+    } catch (err) {
+      console.error("Error fetching storages:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchStorages();
+  }, []);
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (isEditing) {
-      setColdStorages((prev) =>
-        prev.map((storage) => (storage.id === formData.id ? formData : storage))
-      );
-      setIsEditing(false);
-    } else {
-      const newId =
-        coldStorages.length > 0
-          ? coldStorages[coldStorages.length - 1].id + 1
-          : 1;
-      setColdStorages((prev) => [...prev, { ...formData, id: newId }]);
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setPhoto(e.target.files[0]);
     }
-    setShowForm(false);
-    resetForm();
   };
 
-  const resetForm = () => {
-    setFormData({
-      id: 0,
-      name: "",
-      contact: "",
-      email: "",
-      address: "",
-      status: "Active",
-    });
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    const data = new FormData();
+
+    data.append("name", formData.name);
+    data.append("description", formData.description);
+    data.append("contact", formData.contact);
+    data.append("address", formData.address);
+    data.append("size", formData.size);
+
+    if (photo) data.append("photo", photo);
+
+    try {
+      if (isEditing && editingId) {
+        await axios.put(
+          `${process.env.REACT_APP_BACKEND_URL}/cold-storages/update/${editingId}`,
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      } else {
+        await axios.post(
+          `${process.env.REACT_APP_BACKEND_URL}/cold-storages/add`,
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      }
+
+      setFormData({
+        name: "",
+        description: "",
+        contact: "",
+        address: "",
+        size: "",
+      });
+      setPhoto(null);
+      setIsEditing(false);
+      setEditingId(null);
+      setShowForm(false);
+      fetchStorages();
+    } catch (err) {
+      console.error("Submission error:", err);
+    }
   };
 
   const handleEdit = (storage: ColdStorageItem) => {
     setFormData(storage);
+    setEditingId(storage._id || null);
     setIsEditing(true);
     setShowForm(true);
   };
 
-  const handleDelete = (id: number) => {
-    setColdStorages((prev) => prev.filter((storage) => storage.id !== id));
+  const handleDelete = async (id?: string) => {
+    if (!id) return;
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_BACKEND_URL}/cold-storages/delete/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      fetchStorages();
+    } catch (err) {
+      console.error("Delete error:", err);
+    }
   };
 
   return (
     <div className="plant-page-wrapper">
       <Header />
-
       <div className="content">
         <h2 className="page-title">Manage Cold Storages</h2>
 
-        {}
         <button className="add-btn" onClick={() => setShowForm(true)}>
           <FaPlus /> Add Cold Storage
         </button>
 
-        {}
         {showForm && (
           <div className="form-container">
             <h3>{isEditing ? "Edit Cold Storage" : "Add Cold Storage"}</h3>
             <form onSubmit={handleSubmit}>
               <input
-                type="text"
                 name="name"
-                placeholder="Storage Name"
                 value={formData.name}
                 onChange={handleChange}
+                placeholder="Name"
+                required
+              />
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                placeholder="Description"
                 required
               />
               <input
-                type="text"
                 name="contact"
-                placeholder="Contact"
                 value={formData.contact}
                 onChange={handleChange}
+                placeholder="Contact Number"
                 required
               />
               <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="text"
                 name="address"
-                placeholder="Address"
                 value={formData.address}
                 onChange={handleChange}
+                placeholder="Address"
                 required
               />
-              <select
-                name="status"
-                value={formData.status}
+              <input
+                name="size"
+                value={formData.size}
                 onChange={handleChange}
-              >
-                <option value="Active">Active</option>
-                <option value="Not Active">Not Active</option>
-              </select>
+                placeholder="Storage Size"
+                required
+              />
+              <input type="file" accept="image/*" onChange={handleFileChange} />
               <button type="submit">{isEditing ? "Update" : "Add"}</button>
               <button type="button" onClick={() => setShowForm(false)}>
                 Cancel
@@ -166,47 +195,41 @@ const ColdStorage: React.FC = () => {
           </div>
         )}
 
-        {}
         <div className="table-wrapper">
           <table>
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Storage Name</th>
+                <th>Name</th>
                 <th>Contact</th>
-                <th>Email</th>
+                <th>Size</th>
                 <th>Address</th>
-                <th>Status</th>
+                <th>Photo</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {coldStorages.map((storage) => (
-                <tr key={storage.id}>
-                  <td>{storage.id}</td>
-                  <td>{storage.name}</td>
-                  <td>{storage.contact}</td>
-                  <td>{storage.email}</td>
-                  <td>{storage.address}</td>
-                  <td
-                    className={
-                      storage.status === "Active"
-                        ? "status-active"
-                        : "status-inactive"
-                    }
-                  >
-                    {storage.status}
+              {storages.map((s) => (
+                <tr key={s._id}>
+                  <td>{s.name}</td>
+                  <td>{s.contact}</td>
+                  <td>{s.size}</td>
+                  <td>{s.address}</td>
+                  <td>
+                    {s.photo && (
+                      <img
+                        src={`http://localhost:5000${s.photo}`}
+                        alt={s.name}
+                        width="60"
+                      />
+                    )}
                   </td>
                   <td className="action-buttons">
-                    <button
-                      className="edit-btn"
-                      onClick={() => handleEdit(storage)}
-                    >
+                    <button className="edit-btn" onClick={() => handleEdit(s)}>
                       <FaEdit /> Edit
                     </button>
                     <button
                       className="delete-btn"
-                      onClick={() => handleDelete(storage.id)}
+                      onClick={() => handleDelete(s._id)}
                     >
                       <FaTrash /> Delete
                     </button>

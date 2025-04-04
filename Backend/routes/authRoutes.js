@@ -6,6 +6,7 @@ const {
   updateProfile,
   getAllUsers,
   deleteUser,
+  adminLogin,
 } = require("../controllers/authController");
 const verifyToken = require("../middleware/authMiddleware");
 const router = express.Router();
@@ -17,5 +18,6 @@ router.put("/profile/:id", verifyToken, updateProfile);
 
 router.get("/all-users", getAllUsers);
 router.delete("/:id", deleteUser);
+router.post("/admin-login", adminLogin);
 
 module.exports = router;
