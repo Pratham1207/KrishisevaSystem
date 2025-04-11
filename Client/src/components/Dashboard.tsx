@@ -9,6 +9,7 @@ import PickMealsImage from "../Assets/pick-meals-image.png";
 import ChooseMealsImage from "../Assets/choose-image.png";
 import DeliveryMealsImage from "../Assets/delivery-image.png";
 
+
 interface WorkInfo {
   image: string;
   title: string;

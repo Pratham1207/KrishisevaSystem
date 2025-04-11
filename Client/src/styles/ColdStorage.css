@@ -1,9 +1,11 @@
+/* General Container */
 .container {
   font-family: Arial, sans-serif;
   padding: 20px;
   background-color: #f9f9f9;
 }
 
+/* Banner Section */
 .banner {
   position: relative;
   width: 100%;
@@ -29,6 +31,7 @@
   color: black;
 }
 
+/* Breadcrumb */
 .breadcrumb {
   margin: 20px 0;
   font-size: 14px;
@@ -40,6 +43,7 @@
   color: black;
 }
 
+/* Content Grid */
 .content-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -50,6 +54,7 @@
   width: auto;
 }
 
+/* Card Style */
 .card {
   background: white;
   padding: 20px;
@@ -61,6 +66,7 @@
   margin-top: 10px;
 }
 
+/* Store Card */
 .store-card {
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -68,12 +74,14 @@
   align-items: center;
   margin: 1rem;
 }
+
 .store-card img {
   width: 100%;
   height: auto;
   border-radius: 5px;
 }
 
+/* Search Section */
 .search-section {
   max-width: 100%;
   text-align: center;
@@ -87,6 +95,7 @@
   margin-top: 10px;
 }
 
+/* Buttons */
 .buttons {
   margin-top: 10px;
 }
@@ -110,6 +119,7 @@
   color: black;
 }
 
+/* Help Button */
 .help-button {
   position: fixed;
   bottom: 10px;
@@ -127,4 +137,77 @@
 
 .search {
   text-align: left;
+}
+
+/* Responsive Design for Tablets (iPads, landscape/portrait) */
+@media screen and (max-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .store-card {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .banner-title {
+    font-size: 22px;
+  }
+
+  .search-input {
+    width: 80%;
+  }
+  
+  .search-btn, .reset-btn {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+/* Responsive Design for Mobile Devices */
+@media screen and (max-width: 600px) {
+  .container {
+    padding: 15px;
+  }
+
+  .banner {
+    height: 200px;
+  }
+
+  .banner-title {
+    font-size: 20px;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .store-card {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .card {
+    padding: 15px;
+  }
+
+  .search-input {
+    width: 90%;
+  }
+
+  .help-button button {
+    padding: 8px 12px;
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .search-btn, .reset-btn {
+    width: 100%;
+  }
 }
