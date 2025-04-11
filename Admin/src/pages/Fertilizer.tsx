@@ -6,6 +6,7 @@ import { TbMessageCircle } from "react-icons/tb";
 import { MdOutlineNotificationsNone } from "react-icons/md";
 import img from "../assets/user.png";
 import Header from "../components/Header";
+import "../styles/Fertilizer.css";
 
 interface Fertilizer {
   _id?: string;
@@ -211,6 +212,33 @@ const Fertilizer: React.FC = () => {
             </tbody>
           </table>
         </div>
+
+        {}
+        <div className="fertilizer-cards-mobile">
+          {fertilizers
+            .filter((f) =>
+              f.name.toLowerCase().includes(search.toLowerCase())
+            )
+            .map((fertilizer, index) => (
+              <div key={fertilizer._id} className="mobile-fertilizer-card">
+                <h4>{index + 1}. {fertilizer.name}</h4>
+                <p><strong>Type:</strong> {fertilizer.type}</p>
+                <p><strong>Quantity:</strong> {fertilizer.quantity}</p>
+                <p><strong>Unit:</strong> {fertilizer.unit}</p>
+                <p><strong>Price:</strong> {fertilizer.price}</p>
+                <div className="mobile-fertilizer-actions">
+                  <button className="edit-btn" onClick={() => handleEdit(fertilizer)}>
+                    <FaEdit /> Edit
+                  </button>
+                  <button className="delete-btn" onClick={() => handleDelete(fertilizer._id)}>
+                    <FaTrash /> Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+        </div>
+
+
       </div>
     </div>
   );

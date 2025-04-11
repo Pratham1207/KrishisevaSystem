@@ -1,0 +1,156 @@
+.plant-page-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+    background: #f9fafa;
+    padding-bottom: 30px;
+  }
+  
+  .content {
+    width: 90%;
+    max-width: 1100px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
+    text-align: center;
+  }
+  
+  .page-title {
+    font-size: 1.8rem;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+  }
+  
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    padding: 10px;
+    display: block;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ccc;
+    font-size: 1rem;
+    text-align: left;
+    color: #212121;
+  }
+  
+  img {
+    border-radius: 6px;
+    border: 1px solid #aaa;
+    width: 60px;
+    height: auto;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  .edit-btn, .delete-btn, .add-btn {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.3s ease;
+  }
+  
+  .edit-btn {
+    background: #ffcc00;
+    color: #000;
+  }
+  
+  .delete-btn {
+    background: #d32f2f;
+    color: #fff;
+  }
+  
+  .edit-btn:focus,
+  .delete-btn:focus,
+  .add-btn:focus {
+    outline: 3px solid #005fcc;
+    outline-offset: 2px;
+  }
+  
+  .add-btn {
+    background: #388e3c;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  
+  .cold-cards-mobile {
+    display: none;
+  }
+  
+  .mobile-cold-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .mobile-cold-card h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+  }
+  
+  .mobile-cold-card p {
+    margin: 6px 0;
+    font-size: 0.95rem;
+    color: #444;
+    line-height: 1.4;
+  }
+  
+  .mobile-cold-card p strong {
+    display: inline-block;
+    width: 100px;
+    color: #222;
+  }
+  
+  .mobile-cold-card img {
+    margin-top: 10px;
+    width: 80px;
+    height: auto;
+  }
+  
+  .card-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+  }
+  
+  /* Mobile visibility toggle */
+  @media screen and (max-width: 768px) {
+    .table-wrapper {
+      display: none;
+    }
+  
+    .cold-cards-mobile {
+      display: block;
+      width: 100%;
+    }
+  }
+  

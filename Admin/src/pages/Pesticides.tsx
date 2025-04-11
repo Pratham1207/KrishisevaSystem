@@ -6,6 +6,7 @@ import { TbMessageCircle } from "react-icons/tb";
 import { MdOutlineNotificationsNone } from "react-icons/md";
 import img from "../assets/user.png";
 import Header from "../components/Header";
+import "../styles/Pesticide.css";
 
 interface Pesticide {
   _id?: string;
@@ -181,6 +182,28 @@ const Pesticides: React.FC = () => {
             </tbody>
           </table>
         </div>
+
+        {}
+        <div className="pesticide-cards-mobile">
+          {pesticides
+            .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
+            .map((pesticide, index) => (
+              <div key={pesticide._id} className="mobile-pesticide-card">
+                <h4>{index + 1}. {pesticide.name}</h4>
+                <p><strong>Dose:</strong> {pesticide.dose}</p>
+                <p><strong>Description:</strong> {pesticide.description}</p>
+                <div className="mobile-pesticide-actions">
+                  <button className="edit-btn" onClick={() => handleEdit(pesticide)}>
+                    <FaEdit /> Edit
+                  </button>
+                  <button className="delete-btn" onClick={() => handleDelete(pesticide._id)}>
+                    <FaTrash /> Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+        </div>
+
       </div>
     </div>
   );

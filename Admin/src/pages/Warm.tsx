@@ -161,6 +161,26 @@ const Warm: React.FC = () => {
             </tbody>
           </table>
         </div>
+
+        {}
+        <div className="warm-cards-mobile">
+          {insects.map((insect, index) => (
+            <div key={insect._id} className="mobile-warm-card">
+              <h4>{index + 1}. {insect.name}</h4>
+              <p><strong>Pesticide:</strong> {insect.pesticide}</p>
+              <div className="mobile-warm-actions">
+                <button className="edit-btn" onClick={() => handleEdit(insect)}>
+                  <FaEdit /> Edit
+                </button>
+                <button className="delete-btn" onClick={() => handleDelete(insect._id)}>
+                  <FaTrash /> Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+
       </div>
     </div>
   );
