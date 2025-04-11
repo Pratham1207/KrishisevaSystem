@@ -36,6 +36,7 @@ const Navbar: React.FC = () => {
     ...(userObj && userObj?.role === "csowner"
       ? [{ text: "Add Cold Storage", path: "/add-cold-storage" }]
       : []),
+    ...(userObj ? [{ text: "Soil Data", path: "/soil-dashboard" }] : []),
     ...(userObj ? [{ text: "Plants", path: "/plant-details" }] : []),
     { text: "About Us", path: "/about-us" },
     { text: "FAQs", path: "/faq" },

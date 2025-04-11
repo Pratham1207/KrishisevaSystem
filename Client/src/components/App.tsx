@@ -9,7 +9,7 @@ import ContactUs from "./ContactUs";
 import PlantDetail from "./PlantDetail";
 import ColdStorage from "./ColdStorage";
 import AddColdStorage from "./AddColdStorage";
-import SoilDataDashboard from "./SoilDataDemo";
+import SoilDataDashboard from "./SoilData";
 import UserProfile from "./UserProfile";
 import PageNotFound from "./PageNotFound";
 import { ToastContainer } from "react-toastify";
@@ -72,7 +72,7 @@ const App: React.FC = () => {
               )
             }
           />
-          <Route path="/soil-data-demo" element={<SoilDataDashboard />} />
+          <Route path="/soil-dashboard" element={<SoilDataDashboard />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>

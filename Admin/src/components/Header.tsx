@@ -49,10 +49,10 @@ const Header: React.FC<HeaderProps> = ({
         <p>{subtitle}</p>
       </div>
 
-      <div className="searchBar flex">
+      {/* <div className="searchBar flex">
         <input type="text" placeholder={searchPlaceholder} />
         <BiSearchAlt className="icon" />
-      </div>
+      </div> */}
 
       <div className="adminDiv flex">
         <TbMessageCircle className="icon" />
