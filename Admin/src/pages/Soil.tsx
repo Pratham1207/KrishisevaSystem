@@ -4,6 +4,7 @@ import { BiSearchAlt } from "react-icons/bi";
 import { TbMessageCircle } from "react-icons/tb";
 import { MdOutlineNotificationsNone } from "react-icons/md";
 import img from "../assets/user.png";
+import "../styles/Soil.css";
 import {
   getAllSoils,
   createSoil,
@@ -176,6 +177,27 @@ const Soil: React.FC = () => {
             </tbody>
           </table>
         </div>
+
+        {}
+        <div className="soil-cards-mobile">
+          {soils.map((soil, index) => (
+            <div key={soil._id} className="mobile-soil-card">
+              <h4>{index + 1}. {soil.name}</h4>
+              <p><strong>pH:</strong> {soil.ph}</p>
+              <p><strong>Description:</strong> {soil.description}</p>
+              <div className="mobile-soil-actions">
+                <button className="edit-btn" onClick={() => handleEdit(soil)}>
+                  <FaEdit /> Edit
+                </button>
+                <button className="delete-btn" onClick={() => handleDelete(soil._id)}>
+                  <FaTrash /> Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+
       </div>
     </div>
   );

@@ -1,10 +1,8 @@
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { BiSearchAlt } from "react-icons/bi";
-import { TbMessageCircle } from "react-icons/tb";
-import { MdOutlineNotificationsNone } from "react-icons/md";
-import img from "../assets/user.png";
 import Header from "../components/Header";
+import "../styles/Contactus.css";
 
 interface ContactMessage {
   _id: string;
@@ -38,6 +36,8 @@ const ContactMessages: React.FC = () => {
 
       <div className="content">
         <h2 className="page-title">Contact Us Messages</h2>
+
+        {/* Desktop Table View */}
         <div className="table-wrapper">
           <table>
             <thead>
@@ -62,6 +62,19 @@ const ContactMessages: React.FC = () => {
             </tbody>
           </table>
         </div>
+
+        {/* Mobile Card View */}
+        <div className="contact-cards-mobile">
+          {messages.map((msg, index) => (
+            <div key={msg._id} className="mobile-contact-card">
+              <h4>{index + 1}. {msg.name}</h4>
+              <p><strong>Email:</strong> {msg.email}</p>
+              <p><strong>Message:</strong> {msg.message}</p>
+              <p><strong>Received:</strong> {new Date(msg.createdAt).toLocaleString()}</p>
+            </div>
+          ))}
+        </div>
+
       </div>
     </div>
   );

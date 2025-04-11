@@ -167,6 +167,25 @@ const Faq: React.FC = () => {
             </tbody>
           </table>
         </div>
+
+        { }
+        <div className="faq-cards-mobile">
+          {faqs.map((faq, index) => (
+            <div key={faq._id} className="mobile-faq-card">
+              <h4>{index + 1}. {faq.question}</h4>
+              <p>{faq.answer}</p>
+              <div className="mobile-faq-actions">
+                <button className="edit-btn" onClick={() => handleEdit(faq)}>
+                  <FaEdit /> Edit
+                </button>
+                <button className="delete-btn" onClick={() => handleDelete(faq._id)}>
+                  <FaTrash /> Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
       </div>
     </div>
   );

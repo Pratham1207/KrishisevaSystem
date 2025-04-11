@@ -349,6 +349,33 @@ const Plant: React.FC = () => {
             </tbody>
           </table>
         </div>
+        {}
+<div className="plant-cards-mobile">
+  {plants.map((plant) => (
+    <div key={plant._id} className="mobile-card">
+      <img
+        src={`${process.env.REACT_APP_BACKEND_URL}${plant.image}`}
+        alt={plant.name}
+        className="mobile-card-image"
+      />
+      <div className="mobile-card-details">
+        <h4>{plant.name}</h4>
+        <p><strong>Season:</strong> {plant.season}</p>
+        <p><strong>Distance:</strong> {plant.distance}</p>
+        <p><strong>Growth Time:</strong> {plant.growthTime}</p>
+        <div className="mobile-actions">
+          <button className="edit-btn" onClick={() => handleEdit(plant)}>
+            <FaEdit /> Edit
+          </button>
+          <button className="delete-btn" onClick={() => handleDelete(plant._id)}>
+            <FaTrash /> Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+
       </div>
     </div>
   );

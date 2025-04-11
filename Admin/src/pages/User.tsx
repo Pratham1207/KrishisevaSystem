@@ -6,6 +6,7 @@ import { TbMessageCircle } from "react-icons/tb";
 import { MdOutlineNotificationsNone } from "react-icons/md";
 import img from "../assets/user.png";
 import Header from "../components/Header";
+import "../styles/User.css";
 
 interface User {
   _id: string;
@@ -90,6 +91,28 @@ const User: React.FC = () => {
             </tbody>
           </table>
         </div>
+
+        {}
+        <div className="user-cards-mobile">
+          {users
+            .filter((u) =>
+              u.name.toLowerCase().includes(search.toLowerCase())
+            )
+            .map((user, index) => (
+              <div key={user._id} className="mobile-user-card">
+                <h4>{index + 1}. {user.name}</h4>
+                <p><strong>Phone:</strong> {user.phone || "-"}</p>
+                <p><strong>Email:</strong> {user.email}</p>
+                <p><strong>Role:</strong> {user.role}</p>
+                <div className="mobile-user-actions">
+                  <button className="delete-btn" onClick={() => handleDelete(user._id)}>
+                    <FaTrash /> Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+        </div>
+
       </div>
     </div>
   );
