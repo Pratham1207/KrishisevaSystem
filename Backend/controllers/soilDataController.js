@@ -30,7 +30,7 @@ const getSOilDataForUser = async (req, res) => {
   try {
     const userId = req.params.id;
     const data = await SoilData.find({ createdBy: userId }).sort({
-      createdAt: -1,
+      timestamp: -1,
     });
     res.status(200).json(data);
   } catch (err) {
