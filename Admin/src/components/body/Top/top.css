@@ -88,6 +88,15 @@
   border-radius: 1rem;
   overflow: hidden;
 }
+.videoDiv::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4); 
+  z-index: 1;
+}
+
 .topSection .cardSection .rightCard .videoDiv {
   position: absolute;
   height: 100%;
@@ -106,7 +115,7 @@
 .topSection .cardSection .rightCard h1,
 .topSection .cardSection .rightCard p,
 .topSection .cardSection .rightCard .btn {
-  z-index: 100;
+  z-index: 2;
 }
 .topSection .cardSection .rightCard h1 {
   font-size: var(--h1FontSize);
@@ -130,7 +139,7 @@
 .topSection .cardSection .rightCard .buttons .transparent {
   background: none;
   border: 2px solid var(--paleGreen);
-  color: var(--paleGreen);
+  color: #ffffff;;
 }
 .topSection .cardSection .rightCard .buttons .transparent:hover {
   background: var(--paleGreen);
