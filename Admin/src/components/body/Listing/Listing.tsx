@@ -8,104 +8,54 @@ import plant2 from "../../../Assets/plant2.png";
 import plant3 from "../../../Assets/plant3.png";
 import plant4 from "../../../Assets/plant4.png";
 
-import user1 from "../../../Assets/user1.png";
-import user2 from "../../../Assets/user2.png";
-import user3 from "../../../Assets/user3.png";
-import user4 from "../../../Assets/user4.png";
-
 const Listing = () => {
   return (
-    <section className="lisitingSection">
+    <section className="lisitingSection" aria-labelledby="listing-heading">
       {/* Heading */}
       <div className="heading flex">
-        <h1>My Listings</h1>
-        <button className="btn flex">
-          See All <BsArrowRightShort className="icon" />
+        <h2 id="listing-heading">My Listings</h2>
+        <button
+          className="btn flex"
+          aria-label="See all plant listings"
+        >
+          See All <BsArrowRightShort className="icon" aria-hidden="true" />
         </button>
       </div>
 
       {/* Plant Listings */}
       <div className="secContainer flex">
-        <div className="singleItem">
-          <AiFillHeart className="icon" />
-          <img src={plant1} alt="Orchid" />
+        {/* Each card wrapped in article for better semantics */}
+        <article className="singleItem" aria-label="Orchid Listing">
+          <button className="icon-btn" aria-label="Remove Orchid from favorites">
+            <AiFillHeart className="icon" />
+          </button>
+          <img src={plant1} alt="Potted Orchid plant" />
           <h3>Orchid</h3>
-        </div>
+        </article>
 
-        <div className="singleItem">
-          <AiOutlineHeart className="icon" />
-          <img src={plant2} alt="Spider Plant" />
+        <article className="singleItem" aria-label="Spider Plant Listing">
+          <button className="icon-btn" aria-label="Add Spider Plant to favorites">
+            <AiOutlineHeart className="icon" />
+          </button>
+          <img src={plant2} alt="Spider plant in white ceramic pot" />
           <h3>Spider Plant</h3>
-        </div>
+        </article>
 
-        <div className="singleItem">
-          <AiOutlineHeart className="icon" />
-          <img src={plant3} alt="Coffee Plant" />
+        <article className="singleItem" aria-label="Coffee Plant Listing">
+          <button className="icon-btn" aria-label="Add Coffee Plant to favorites">
+            <AiOutlineHeart className="icon" />
+          </button>
+          <img src={plant3} alt="Coffee plant in a small pot" />
           <h3>Coffee Plant</h3>
-        </div>
+        </article>
 
-        <div className="singleItem">
-          <AiFillHeart className="icon" />
-          <img src={plant4} alt="Button Fern" />
+        <article className="singleItem" aria-label="Button Fern Listing">
+          <button className="icon-btn" aria-label="Remove Button Fern from favorites">
+            <AiFillHeart className="icon" />
+          </button>
+          <img src={plant4} alt="Button Fern on a table" />
           <h3>Button Fern</h3>
-        </div>
-      </div>
-
-      {/* Sellers Section */}
-      <div className="sellers flex">
-        {/* Top Sellers */}
-        <div className="topSellers">
-          <div className="heading flex">
-            <h3>Top Sellers</h3>
-            <button className="btn flex">
-              See All <BsArrowRightShort className="icon" />
-            </button>
-          </div>
-
-          <div className="card flex">
-            <div className="users">
-              <img src={user1} alt="User" />
-              <img src={user2} alt="User" />
-              <img src={user3} alt="User" />
-              <img src={user4} alt="User" />
-            </div>
-            <div className="cardText">
-              <span>
-                14,554 Plants sold <br />
-                <small>
-                  21 Sellers <span className="date">Last 7 Days</span>
-                </small>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Featured Sellers */}
-        <div className="featuredSellers">
-          <div className="heading flex">
-            <h3>Featured Sellers</h3>
-            <button className="btn flex">
-              See All <BsArrowRightShort className="icon" />
-            </button>
-          </div>
-
-          <div className="card flex">
-            <div className="users">
-              <img src={user4} alt="User" />
-              <img src={user3} alt="User" />
-              <img src={user2} alt="User" />
-              <img src={user1} alt="User" />
-            </div>
-            <div className="cardText">
-              <span>
-                28,554 Plants sold <br />
-                <small>
-                  26 Sellers <span className="date">Last 31 Days</span>
-                </small>
-              </span>
-            </div>
-          </div>
-        </div>
+        </article>
       </div>
     </section>
   );
