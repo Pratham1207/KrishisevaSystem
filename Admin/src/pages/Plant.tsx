@@ -110,7 +110,6 @@ const Plant: React.FC = () => {
 
       fetchPlants();
       handleCloseForm();
-      setShowForm(false);
     } catch (err) {
       toast.error("Failed to submit plant");
       console.error(err);
@@ -183,127 +182,150 @@ const Plant: React.FC = () => {
         </button>
 
         {showForm && (
-          <div className="form-container">
-            <form onSubmit={handleSubmit}>
-              <input
-                name="name"
-                placeholder="Name"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-              />
-              <textarea
-                name="description"
-                placeholder="Description"
-                value={formData.description}
-                onChange={handleInputChange}
-                required
-              />
-              <select
-                name="season"
-                value={formData.season}
-                onChange={handleInputChange}
-              >
-                <option value="">Select Season</option>
-                <option value="Spring">Spring</option>
-                <option value="Summer">Summer</option>
-                <option value="Fall">Fall</option>
-                <option value="Winter">Winter</option>
-              </select>
-              <input
-                name="distance"
-                placeholder="Distance (cm)"
-                value={formData.distance}
-                onChange={handleInputChange}
-              />
-              <input
-                name="growthTime"
-                placeholder="Growth Time (days)"
-                value={formData.growthTime}
-                onChange={handleInputChange}
-              />
-              <select
-                name="fertilizer"
-                value={formData.fertilizer}
-                onChange={handleInputChange}
-              >
-                <option value="">Select Fertilizer</option>
-                {fertilizers.map((f) => (
-                  <option key={f._id} value={f._id}>
-                    {f.name}
-                  </option>
-                ))}
-              </select>
-              <input
-                name="fertilizerTime"
-                placeholder="Fertilizer Time"
-                value={formData.fertilizerTime}
-                onChange={handleInputChange}
-              />
-              <input
-                name="temperature"
-                placeholder="Temperature Range"
-                value={formData.temperature}
-                onChange={handleInputChange}
-              />
-              <select
-                name="soil"
-                value={formData.soil}
-                onChange={handleInputChange}
-              >
-                <option value="">Select Soil</option>
-                {soils.map((s) => (
-                  <option key={s._id} value={s._id}>
-                    {s.name}
-                  </option>
-                ))}
-              </select>
-              <select
-                name="pesticide"
-                value={formData.pesticide}
-                onChange={handleInputChange}
-              >
-                <option value="">Select Pesticide</option>
-                {pesticides.map((p) => (
-                  <option key={p._id} value={p._id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
-              <input
-                name="pesticideDose"
-                placeholder="Pesticide Dose"
-                value={formData.pesticideDose}
-                onChange={handleInputChange}
-              />
-              <select
-                name="warm"
-                value={formData.warm}
-                onChange={handleInputChange}
-              >
-                <option value="">Select Warm Climate</option>
-                {warms.map((w) => (
-                  <option key={w._id} value={w._id}>
-                    {w.name}
-                  </option>
-                ))}
-              </select>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                required={!isEditing}
-              />
-              <button type="submit">
-                {isEditing ? "Update Plant" : "Add Plant"}
-              </button>
-              <button type="button" onClick={handleCloseForm}>
-                Cancel
-              </button>
-            </form>
+          <div className="modal-overlay">
+            <div className="modal">
+              <h3>{isEditing ? "Update Plant" : "Add New Plant"}</h3>
+              <form className="plant-form" onSubmit={handleSubmit}>
+                <input
+                  className="form-input"
+                  name="name"
+                  placeholder="Plant Name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
+                <textarea
+                  className="form-textarea"
+                  name="description"
+                  placeholder="Description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  required
+                />
+                <select
+                  className="form-input"
+                  name="season"
+                  value={formData.season}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Select Season</option>
+                  <option value="Spring">Spring</option>
+                  <option value="Summer">Summer</option>
+                  <option value="Fall">Fall</option>
+                  <option value="Winter">Winter</option>
+                </select>
+                <input
+                  className="form-input"
+                  name="distance"
+                  placeholder="Distance (cm)"
+                  value={formData.distance}
+                  onChange={handleInputChange}
+                />
+                <input
+                  className="form-input"
+                  name="growthTime"
+                  placeholder="Growth Time (days)"
+                  value={formData.growthTime}
+                  onChange={handleInputChange}
+                />
+                <select
+                  className="form-input"
+                  name="fertilizer"
+                  value={formData.fertilizer}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Select Fertilizer</option>
+                  {fertilizers.map((f) => (
+                    <option key={f._id} value={f._id}>
+                      {f.name}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  className="form-input"
+                  name="fertilizerTime"
+                  placeholder="Fertilizer Time"
+                  value={formData.fertilizerTime}
+                  onChange={handleInputChange}
+                />
+                <input
+                  className="form-input"
+                  name="temperature"
+                  placeholder="Temperature Range"
+                  value={formData.temperature}
+                  onChange={handleInputChange}
+                />
+                <select
+                  className="form-input"
+                  name="soil"
+                  value={formData.soil}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Select Soil</option>
+                  {soils.map((s) => (
+                    <option key={s._id} value={s._id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  className="form-input"
+                  name="pesticide"
+                  value={formData.pesticide}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Select Pesticide</option>
+                  {pesticides.map((p) => (
+                    <option key={p._id} value={p._id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  className="form-input"
+                  name="pesticideDose"
+                  placeholder="Pesticide Dose"
+                  value={formData.pesticideDose}
+                  onChange={handleInputChange}
+                />
+                <select
+                  className="form-input"
+                  name="warm"
+                  value={formData.warm}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Select Warm Climate</option>
+                  {warms.map((w) => (
+                    <option key={w._id} value={w._id}>
+                      {w.name}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  className="form-input"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  required={!isEditing}
+                />
+                <div className="form-buttons">
+                  <button className="form-submit-btn" type="submit">
+                    {isEditing ? "Update Plant" : "Add Plant"}
+                  </button>
+                  <button
+                    className="form-cancel-btn"
+                    type="button"
+                    onClick={handleCloseForm}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
 
+        {/* You can retain the rest of your table and mobile layout here */}
         <div className="table-wrapper">
           <table>
             <thead>
@@ -349,33 +371,32 @@ const Plant: React.FC = () => {
             </tbody>
           </table>
         </div>
-        {}
-<div className="plant-cards-mobile">
-  {plants.map((plant) => (
-    <div key={plant._id} className="mobile-card">
-      <img
-        src={`${process.env.REACT_APP_BACKEND_URL}${plant.image}`}
-        alt={plant.name}
-        className="mobile-card-image"
-      />
-      <div className="mobile-card-details">
-        <h4>{plant.name}</h4>
-        <p><strong>Season:</strong> {plant.season}</p>
-        <p><strong>Distance:</strong> {plant.distance}</p>
-        <p><strong>Growth Time:</strong> {plant.growthTime}</p>
-        <div className="mobile-actions">
-          <button className="edit-btn" onClick={() => handleEdit(plant)}>
-            <FaEdit /> Edit
-          </button>
-          <button className="delete-btn" onClick={() => handleDelete(plant._id)}>
-            <FaTrash /> Delete
-          </button>
+        { }
+        <div className="plant-cards-mobile">
+          {plants.map((plant) => (
+            <div key={plant._id} className="mobile-card">
+              <img
+                src={`${process.env.REACT_APP_BACKEND_URL}${plant.image}`}
+                alt={plant.name}
+                className="mobile-card-image"
+              />
+              <div className="mobile-card-details">
+                <h4>{plant.name}</h4>
+                <p><strong>Season:</strong> {plant.season}</p>
+                <p><strong>Distance:</strong> {plant.distance}</p>
+                <p><strong>Growth Time:</strong> {plant.growthTime}</p>
+                <div className="mobile-actions">
+                  <button className="edit-btn" onClick={() => handleEdit(plant)}>
+                    <FaEdit /> Edit
+                  </button>
+                  <button className="delete-btn" onClick={() => handleDelete(plant._id)}>
+                    <FaTrash /> Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
-    </div>
-  ))}
-</div>
-
       </div>
     </div>
   );

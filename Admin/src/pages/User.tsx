@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaTrash } from "react-icons/fa";
-import { BiSearchAlt } from "react-icons/bi";
-import { TbMessageCircle } from "react-icons/tb";
-import { MdOutlineNotificationsNone } from "react-icons/md";
-import img from "../assets/user.png";
 import Header from "../components/Header";
 import "../styles/User.css";
 
@@ -50,7 +46,6 @@ const User: React.FC = () => {
   return (
     <div className="plant-page-wrapper">
       <Header />
-
       <div className="content">
         <h2 className="page-title">Manage Users</h2>
 
@@ -92,7 +87,6 @@ const User: React.FC = () => {
           </table>
         </div>
 
-        {}
         <div className="user-cards-mobile">
           {users
             .filter((u) =>
@@ -112,7 +106,6 @@ const User: React.FC = () => {
               </div>
             ))}
         </div>
-
       </div>
     </div>
   );
