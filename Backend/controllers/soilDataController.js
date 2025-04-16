@@ -4,11 +4,11 @@ const sendAlertNotification = require("../utils/sendNotification");
 const postSoilData = async (req, res) => {
   try {
     const { humidity, temperature, moisture } = req.body;
-    const MOISTURE_THRESHOLD = 700;
+    const MOISTURE_THRESHOLD = 200;
     if (moisture > MOISTURE_THRESHOLD) {
       sendAlertNotification(
         "yashpancholi001@gmail.com",
-        "+13828850314",
+        "+12268997572",
         moisture
       );
     }
