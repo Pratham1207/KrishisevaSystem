@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
-import { BiSearchAlt } from "react-icons/bi";
-import { TbMessageCircle } from "react-icons/tb";
-import { MdOutlineNotificationsNone } from "react-icons/md";
-import img from "../assets/user.png";
 import "../styles/Soil.css";
 import {
   getAllSoils,
@@ -53,10 +49,7 @@ const Soil: React.FC = () => {
         await createSoil(formData);
       }
       await fetchSoils();
-      setFormData({ name: "", ph: "", description: "" });
-      setIsEditing(false);
-      setEditingId(null);
-      setShowForm(false);
+      resetForm();
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -90,10 +83,8 @@ const Soil: React.FC = () => {
   return (
     <div className="plant-page-wrapper">
       <Header />
-
       <div className="content">
         <h2 className="page-title">Manage Soils</h2>
-
         <button
           className="add-btn"
           onClick={() => {
@@ -105,42 +96,51 @@ const Soil: React.FC = () => {
         </button>
 
         {showForm && (
-          <div className="form-container">
-            <h3>{isEditing ? "Edit Soil" : "Add Soil"}</h3>
-            <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                name="name"
-                placeholder="Soil Name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="text"
-                name="ph"
-                placeholder="pH Level"
-                value={formData.ph}
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="text"
-                name="description"
-                placeholder="Description"
-                value={formData.description}
-                onChange={handleChange}
-                required
-              />
-              <button type="submit">{isEditing ? "Update" : "Add"}</button>
-              <button type="button" onClick={resetForm}>
-                Cancel
-              </button>
-            </form>
+          <div className="modal-overlay">
+            <div className="modal">
+              <h3>{isEditing ? "Edit Soil" : "Add Soil"}</h3>
+              <form className="plant-form" onSubmit={handleSubmit}>
+                <input
+                  className="form-input"
+                  type="text"
+                  name="name"
+                  placeholder="Soil Name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
+                <input
+                  className="form-input"
+                  type="text"
+                  name="ph"
+                  placeholder="pH Level"
+                  value={formData.ph}
+                  onChange={handleChange}
+                  required
+                />
+                <input
+                  className="form-input"
+                  type="text"
+                  name="description"
+                  placeholder="Description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  required
+                />
+                <div className="form-buttons">
+                  <button className="form-submit-btn" type="submit">
+                    {isEditing ? "Update" : "Add"}
+                  </button>
+                  <button className="form-cancel-btn" type="button" onClick={resetForm}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
 
-        <div className="table-container">
+<div className="table-container">
           <table>
             <thead>
               <tr>
@@ -196,8 +196,6 @@ const Soil: React.FC = () => {
             </div>
           ))}
         </div>
-
-
       </div>
     </div>
   );

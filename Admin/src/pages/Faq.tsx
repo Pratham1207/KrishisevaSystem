@@ -2,10 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/Faq.css";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
-import { BiSearchAlt } from "react-icons/bi";
-import { TbMessageCircle } from "react-icons/tb";
-import { MdOutlineNotificationsNone } from "react-icons/md";
-import img from "../assets/user.png";
 import Header from "../components/Header";
 
 interface FaqItem {
@@ -46,7 +42,6 @@ const Faq: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
       if (isEditing && formData._id) {
         await axios.put(
@@ -59,11 +54,9 @@ const Faq: React.FC = () => {
           formData
         );
       }
-
       setShowForm(false);
       resetForm();
       setIsEditing(false);
-      setFormData({ question: "", answer: "" });
       fetchFaqs();
     } catch (error) {
       console.error("Error submitting FAQ:", error);
@@ -97,42 +90,48 @@ const Faq: React.FC = () => {
   return (
     <div className="plant-page-wrapper">
       <Header />
-
       <div className="content">
         <h2 className="page-title">Manage FAQs</h2>
-
         <button className="add-btn" onClick={() => setShowForm(true)}>
           <FaPlus /> Add FAQ
         </button>
 
         {showForm && (
-          <div className="form-container">
-            <h3>{isEditing ? "Edit FAQ" : "Add FAQ"}</h3>
-            <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                name="question"
-                placeholder="FAQ Question"
-                value={formData.question}
-                onChange={handleChange}
-                required
-              />
-              <textarea
-                name="answer"
-                placeholder="FAQ Answer"
-                value={formData.answer}
-                onChange={handleChange}
-                required
-              />
-              <button type="submit">{isEditing ? "Update" : "Add"}</button>
-              <button type="button" onClick={resetForm}>
-                Cancel
-              </button>
-            </form>
+          <div className="modal-overlay">
+            <div className="modal">
+              <h3>{isEditing ? "Edit FAQ" : "Add FAQ"}</h3>
+              <form className="plant-form" onSubmit={handleSubmit}>
+                <input
+                  className="form-input"
+                  type="text"
+                  name="question"
+                  placeholder="FAQ Question"
+                  value={formData.question}
+                  onChange={handleChange}
+                  required
+                />
+                <textarea
+                  className="form-textarea"
+                  name="answer"
+                  placeholder="FAQ Answer"
+                  value={formData.answer}
+                  onChange={handleChange}
+                  required
+                />
+                <div className="form-buttons">
+                  <button className="form-submit-btn" type="submit">
+                    {isEditing ? "Update" : "Add"}
+                  </button>
+                  <button className="form-cancel-btn" type="button" onClick={resetForm}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
 
-        <div className="table-wrapper">
+<div className="table-wrapper">
           <table>
             <thead>
               <tr>
@@ -185,7 +184,6 @@ const Faq: React.FC = () => {
             </div>
           ))}
         </div>
-
       </div>
     </div>
   );

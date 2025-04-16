@@ -1,10 +1,6 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
-import { BiSearchAlt } from "react-icons/bi";
-import { TbMessageCircle } from "react-icons/tb";
-import { MdOutlineNotificationsNone } from "react-icons/md";
-import img from "../assets/user.png";
 import Header from "../components/Header";
 import "../styles/Pesticide.css";
 
@@ -22,12 +18,15 @@ const Pesticides: React.FC = () => {
     dose: "",
     description: "",
   });
-
   const [isEditing, setIsEditing] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState("");
 
   const API_BASE = "http://localhost:5000/pesticides";
+
+  useEffect(() => {
+    fetchPesticides();
+  }, []);
 
   const fetchPesticides = async () => {
     try {
@@ -37,10 +36,6 @@ const Pesticides: React.FC = () => {
       console.error("Error fetching pesticides:", error);
     }
   };
-
-  useEffect(() => {
-    fetchPesticides();
-  }, []);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -57,7 +52,6 @@ const Pesticides: React.FC = () => {
       } else {
         await axios.post(`${API_BASE}/add`, formData);
       }
-
       fetchPesticides();
       resetForm();
     } catch (error) {
@@ -73,11 +67,7 @@ const Pesticides: React.FC = () => {
 
   const handleDelete = async (id?: string) => {
     if (!id) return;
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this pesticide?"
-    );
-    if (!confirmDelete) return;
-
+    if (!window.confirm("Are you sure you want to delete this pesticide?")) return;
     try {
       await axios.delete(`${API_BASE}/delete/${id}`);
       fetchPesticides();
@@ -95,48 +85,53 @@ const Pesticides: React.FC = () => {
   return (
     <div className="plant-page-wrapper">
       <Header />
-
-      {/* Main Content */}
       <div className="content">
         <h2 className="page-title">Manage Pesticides</h2>
-
         <button className="add-btn" onClick={() => setShowForm(true)}>
           <FaPlus /> Add Pesticide
         </button>
 
-        {/* Form Section */}
         {showForm && (
-          <div className="form-container">
-            <h3>{isEditing ? "Edit Pesticide" : "Add Pesticide"}</h3>
-            <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                name="name"
-                placeholder="Pesticide Name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="text"
-                name="dose"
-                placeholder="Dose"
-                value={formData.dose}
-                onChange={handleChange}
-                required
-              />
-              <textarea
-                name="description"
-                placeholder="Description"
-                value={formData.description}
-                onChange={handleChange}
-                required
-              />
-              <button type="submit">{isEditing ? "Update" : "Add"}</button>
-              <button type="button" onClick={resetForm}>
-                Cancel
-              </button>
-            </form>
+          <div className="modal-overlay">
+            <div className="modal">
+              <h3>{isEditing ? "Edit Pesticide" : "Add Pesticide"}</h3>
+              <form className="plant-form" onSubmit={handleSubmit}>
+                <input
+                  className="form-input"
+                  type="text"
+                  name="name"
+                  placeholder="Pesticide Name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
+                <input
+                  className="form-input"
+                  type="text"
+                  name="dose"
+                  placeholder="Dose"
+                  value={formData.dose}
+                  onChange={handleChange}
+                  required
+                />
+                <textarea
+                  className="form-textarea"
+                  name="description"
+                  placeholder="Description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  required
+                />
+                <div className="form-buttons">
+                  <button className="form-submit-btn" type="submit">
+                    {isEditing ? "Update" : "Add"}
+                  </button>
+                  <button className="form-cancel-btn" type="button" onClick={resetForm}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
 
@@ -203,7 +198,6 @@ const Pesticides: React.FC = () => {
               </div>
             ))}
         </div>
-
       </div>
     </div>
   );

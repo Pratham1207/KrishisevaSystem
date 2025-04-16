@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../styles/Warm.css";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
-import { BiSearchAlt } from "react-icons/bi";
-import { TbMessageCircle } from "react-icons/tb";
-import { MdOutlineNotificationsNone } from "react-icons/md";
-import img from "../assets/user.png";
 import {
   getAllInsects,
   createInsect,
@@ -51,10 +47,7 @@ const Warm: React.FC = () => {
         await createInsect(formData);
       }
       await fetchInsects();
-      setFormData({ name: "", pesticide: "" });
-      setIsEditing(false);
-      setEditingId(null);
-      setShowForm(false);
+      resetForm();
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -84,49 +77,49 @@ const Warm: React.FC = () => {
   return (
     <div className="plant-page-wrapper">
       <Header />
-
       <div className="content">
         <h2 className="page-title">Manage Insects</h2>
-
-        <button
-          className="add-btn"
-          onClick={() => {
-            resetForm();
-            setShowForm(true);
-          }}
-        >
+        <button className="add-btn" onClick={() => { resetForm(); setShowForm(true); }}>
           <FaPlus /> Add Insect
         </button>
 
         {showForm && (
-          <div className="form-container">
-            <h3>{isEditing ? "Edit Insect" : "Add Insect"}</h3>
-            <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                name="name"
-                placeholder="Insect Name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="text"
-                name="pesticide"
-                placeholder="Pesticide Used"
-                value={formData.pesticide}
-                onChange={handleChange}
-                required
-              />
-              <button type="submit">{isEditing ? "Update" : "Add"}</button>
-              <button type="button" onClick={resetForm}>
-                Cancel
-              </button>
-            </form>
+          <div className="modal-overlay">
+            <div className="modal">
+              <h3>{isEditing ? "Edit Insect" : "Add Insect"}</h3>
+              <form className="plant-form" onSubmit={handleSubmit}>
+                <input
+                  className="form-input"
+                  type="text"
+                  name="name"
+                  placeholder="Insect Name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
+                <input
+                  className="form-input"
+                  type="text"
+                  name="pesticide"
+                  placeholder="Pesticide Used"
+                  value={formData.pesticide}
+                  onChange={handleChange}
+                  required
+                />
+                <div className="form-buttons">
+                  <button className="form-submit-btn" type="submit">
+                    {isEditing ? "Update" : "Add"}
+                  </button>
+                  <button className="form-cancel-btn" type="button" onClick={resetForm}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
 
-        <div className="table-container">
+<div className="table-container">
           <table>
             <thead>
               <tr>
@@ -179,8 +172,6 @@ const Warm: React.FC = () => {
             </div>
           ))}
         </div>
-
-
       </div>
     </div>
   );
