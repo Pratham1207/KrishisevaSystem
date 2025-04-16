@@ -56,7 +56,7 @@ const Sidebar: React.FC = () => {
           <li className="listItem">
             <Link to="/warm" className="menuLink flex">
               <SiSwarm className="icon" />
-              <span className="smallText">Warm</span>
+              <span className="smallText">Insects</span>
             </Link>
           </li>
           <li className="listItem">
